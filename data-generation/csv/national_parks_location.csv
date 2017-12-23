@@ -1,0 +1,60 @@
+id,name,type,street,city,state_abbr,zip,lat,lon
+acad,Acadia National Park,National Park,"2 Cottage St., Chamber of Commerce",Bar Harbor,ME,04609,44.3895893,-68.2049056
+arch,Arches National Park,National Park,PO Box 907,Moab,UT,84532,38.5733155,-109.5498395
+badl,Badlands National Park,National Park,25216 Ben Reifel Road,Interior,SD,57750,43.7490131,-101.9417398
+bibe,Big Bend National Park,National Park,PO Box 129,Big Bend National Park,TX,79834-0129,29.2499017,-103.2501638
+bisc,Biscayne National Park,National Park,9700 SW 328th Street Sir Lancelot Jones Way,Homestead,FL,33033,25.4644137,-80.3347549
+blca,Black Canyon Of The Gunnison National Park,National Park,South Rim Visitor Center 9800 Highway 347,Montrose,CO,81401,38.5549869,-107.6865667
+brca,Bryce Canyon National Park,National Park,Highway 63  Bryce Canyon National Park,Bryce,UT,84764,37.5930377,-112.1870895
+cany,Canyonlands National Park,National Park,2282 Resource Blvd.,Moab,UT,84532,38.538146,-109.510324
+care,Capitol Reef National Park,National Park,52 West Headquarters Drive,Torrey,UT,84775,38.2914507,-111.262037
+cave,Carlsbad Caverns National Park,National Park,727 Carlsbad Caverns Highway,Carlsbad,NM,88220,32.1754148,-104.4446052
+chis,Channel Islands National Park,National Park,1901 Spinnaker Drive,Ventura,CA,93001,34.2484866,-119.2665518
+cong,Congaree National Park,National Park,100 National Park Road,Hopkins,SC,29061,33.8296531,-80.82338050000001
+crla,Crater Lake National Park,National Park,"Crater Lake National Park PO Box 7",Crater Lake,OR,97604,42.8684411,-122.1684785
+cuva,Cuyahoga Valley National Park,National Park,1550 Boston Mills Road,Peninsula,OH,44264,41.2632712,-81.558523
+deva,Death Valley National Park,National Park,579,Death Valley,CA,92328,36.4572559,-116.8662563
+dena,Denali National Park & Preserve,National Park & Preserve,Mile 237 Highway 3,Denali Park,AK,99755,63.7498804,-148.9000286
+drto,Dry Tortugas National Park,National Park,40001 SR-9336,Homestead,FL,33034,25.4416472,-80.7839642
+ever,Everglades National Park,National Park,40001 State Road 9336,Homestead,FL,33034,25.1409318,-80.9241724
+gaar,Gates Of The Arctic National Park & Preserve,National Park & Preserve,Airport Road,Bettles,AK,99726,66.9155294,-151.5184912
+glba,Glacier Bay National Park & Preserve,National Park & Preserve,1 Park Road,Gustavus,AK,99826,58.4556784,-135.8687352
+glac,Glacier National Park,National Park,64 Grinnell Drive Glacier National Park Headquarters,West Glacier,MT,59936,48.5024625,-113.9864865
+grca,Grand Canyon National Park,National Park,20 South Entrance Road,Grand Canyon,AZ,86023,36.054966,-112.1223696
+grte,Grand Teton National Park,National Park,201 Headquarters Loop,Moose,WY,83012,43.6565288,-110.7170897
+grba,Great Basin National Park,National Park,Great Basin National Park 5500 W Hwy 488,Baker,NV,89311,39.0056166,-114.2198707
+grsa,Great Sand Dunes National Park & Preserve,National Park & Preserve,Visitor Center 11999 State Highway 150,Mosca,CO,81146,37.73300710000001,-105.5124983
+grsm,Great Smoky Mountains National Park,National Park,Sugarlands Visitor Center 1420 Little River Road,Gatlinburg,TN,37738,35.685689,-83.53654399999999
+gumo,Guadalupe Mountains National Park,National Park,400 Pine Canyon,Salt Flat,TX,79847,31.892008,-104.8204761
+hale,Haleakal_ National Park,National Park,Haleakalā National Park  Route 378,Kula,HI,96790,20.7594751,-156.2467811
+havo,Hawai'i Volcanoes National Park,National Park,1 Crater Rim Drive,Hawaii National Park,HI,96718,19.4287416,-155.25836
+hosp,Hot Springs National Park,National Park,369 Central Avenue,Hot Springs,AR,71901,34.5137179,-93.0534607
+isro,Isle Royale National Park,National Park,800 East Lakeshore Drive,Houghton,MI,49931,47.1228651,-88.56318739999999
+jotr,Joshua Tree National Park,National Park,74485 National Park Drive,Twentynine Palms,CA,92277-3597,34.1286751,-116.0376186
+katm,Katmai National Park & Preserve,National Park & Preserve,1000 Silver Street Building 603,King Salmon,AK,99613,58.6829638,-156.6687879
+kefj,Kenai Fjords National Park,National Park,411 Washington Street,Seward,AK,99664,60.10094339999999,-149.4393961
+kova,Kobuk Valley National Park,National Park,171 3rd Ave,Kotzebue,AK,99752,66.8934286,-162.6014889
+lach,Lake Chelan National Recreation Area,National Park,810 State Route 20,Sedro-Woolley,WA,98284,48.5109357,-122.2275655
+lacl,Lake Clark National Park & Preserve,National Park & Preserve,1 Park Place,Port Alsworth,AK,99653,60.1974034,-154.322752
+lavo,Lassen Volcanic National Park,National Park,38050 Hwy 36 E,Mineral,CA,96063,40.3466568,-121.6080237
+maca,Mammoth Cave National Park,National Park,7,Mammoth Cave,KY,42259-0007,37.187515,-86.2520047
+meve,Mesa Verde National Park,National Park,Mile .7 Headquarters Loop Road,Mesa Verde National Park,CO,81330,37.2308729,-108.4618335
+mora,Mount Rainier National Park,National Park,55210 238th Avenue East,Ashford,WA,98304,46.7558435,-122.1207775
+npsa,National Park of American Samoa,National Park,"National Park of American Samoa MHJ Building, 2nd Floor",Pago Pago,AS,96799,-14.2583333,-170.6833333
+noca,North Cascades National Park,National Park,810 State Route 20,Sedro-Woolley,WA,98284,48.5109357,-122.2275655
+olym,Olympic National Park,National Park,Olympic National Park Visitor Center 3002 Mount Angeles Road,Port Angeles,WA,98362,48.0993916,-123.425846
+pefo,Petrified Forest National Park,National Park,1 Park Road,Petrified Forest,AZ,86028,35.065907,-109.781625
+pinn,Pinnacles National Park,National Park,5000 Highway 146,Paicines,CA,95043,36.4937268,-121.146443
+romo,Rocky Mountain National Park,National Park,1000 US Hwy 36,Estes Park,CO,80517,40.36620870000001,-105.560894
+sagu,Saguaro National Park,National Park,3693 S Old Spanish Trail,Tucson,AZ,85730,32.1808849,-110.7380215
+kica,Sequoia & Kings Canyon National Parks,National Parks,47050 Generals Highway,Three Rivers,CA,93271,36.5647207,-118.7727191
+shen,Shenandoah National Park,National Park,Shenandoah National Park 3655 U.S. Highway 211 East,Luray,VA,22835,38.6632349,-78.3721789
+thro,Theodore Roosevelt National Park,National Park,315 Second Avenue,Medora,ND,58645,46.9157594,-103.5245147
+viis,Virgin Islands National Park,National Park,1300 Cruz Bay Creek,St. John,VI,00830,18.3424047,-64.74857589999999
+voya,Voyageurs National Park,National Park,Voyageurs National Park Headquarters 360 Hwy 11 East,International Falls,MN,56649,48.4840955,-92.8270873
+wica,Wind Cave National Park,National Park,26611 US Highway 385,Hot Springs,SD,57747,43.491921,-103.4611981
+wotr,Wolf Trap National Park for the Performing Arts,National Park,1551 Trap Road,Vienna,VA,22182-1643,38.9381714,-77.2652809
+wrst,Wrangell - St Elias National Park & Preserve,National Park & Preserve,"Wrangell-St. Elias National Park & Preserve PO Box 439 Mile 106.8 Richardson Highway",Copper Center,AK,99573,61.6440733,-145.3628538
+yell,Yellowstone National Park,National Park,2 Officers Row Yellowstone National Park Headquarters,Yellowstone National Park,WY,82190,44.427963,-110.588455
+yose,Yosemite National Park,National Park,PO Box 577,Yosemite National Park,CA,95389,37.6415479,-119.6267347
+zion,Zion National Park,National Park,Zion National Park 1 Zion Park Blvd. State Route 9,Springdale,UT,84767,37.1888145,-112.9983749

@@ -20,13 +20,14 @@ def get_visitor_counts(id):
     return dict(by_month=data_by_month, total=total)
 
 def save_as_json(data):
-    file = open('csv/data.json', 'w', encoding='utf8')
+    file = open('csv/national_parks_visitors.json', 'w', encoding='utf8')
     json_data = json.dumps(data, ensure_ascii=False)
     file.write(json_data)
     file.close()
 
 # MUST change kings canyon id to KICA in parks_id_name_type.csv
 # the vistor info page is set with the old id
+# Remove LACH due to its duplication with NOCA
 with open('csv/national_parks_location.csv', newline='', encoding='utf-8', errors="replace") as f:
     data = []
     for row in csv.DictReader(f):

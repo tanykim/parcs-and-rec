@@ -3,6 +3,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 from pygeocoder import Geocoder
 
+# {"id": "npsa", "name": "National Park of American Samoa", "type": "National Park", "street": "National Park of American Samoa MHJ Building, 2nd Floor", "city": "Pago Pago", "state_abbr": "AS", "zip": "96799", "lat": "-14.2583333", "lon": "-170.6833333", "by_month": [4788, 3817, 4838, 7497, 4667, 5181, 6090, 4421, 4218, 11494, 7666, 0], "total": "64,677"}
 
 def get_coordinates(address):
     result = Geocoder.geocode(address)
@@ -26,7 +27,7 @@ def get_park_data(id):
 
     coordinates = get_coordinates(street + ', ' + city + ', ' + state_abbr + ' ' + zip)
 
-    return dict(street=street, city=city, state_abbr=state_abbr, zip=zip, lat=coordinates[0], lon=coordinates[1])
+    return dict(street=street, city=city, state_abbr=state_abbr, zip=zip, lon=coordinates[0], lat=coordinates[1])
 
 # returns error when there's no file, but it creates the file
 def save_as_csv(data):

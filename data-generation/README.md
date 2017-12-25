@@ -12,6 +12,10 @@ Run ```get-park-type.py```. This produces ```csv/parks_id_name_type.csv```.
 
 Run ```get-national-parks-location.py```. This produces ```csv/national_parks_location.csv```.
 
-## Step 3. Get the park visitor info & finalize the data
+## Step 3. Get the park visitor info
 
-Run ```get-national-parks-location.py```. This produces the fianl ```csv/data.json```.DS.DS_STore
+Run ```get-national-parks-location.py```. This produces ```csv/national_parks_visitors.json```.
+
+## Step 4. Get the final dataset
+
+Run ```get-final-dataset.py```. This produces the final json file in ```../react-app/src/data/data.json```.

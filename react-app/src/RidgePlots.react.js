@@ -3,8 +3,9 @@
 ******/
 
 import * as d3 from 'd3';
-import React, { Component } from 'react';
 import * as topojson from 'topojson';
+import _ from 'lodash';
+import React, { Component } from 'react';
 
 const data = require('./data/data.json');
 const world = require('./data/worldmap-110m.json');
@@ -30,13 +31,14 @@ class RidgePlots extends Component {
         .attr('transform', d3.event.transform);
     });
 
-  _drawRidgeGraph(dim) {
+  _drawOverview(dim) {
 
     // max total points
     const maxTotal = data.max_total_visitor;
     const valAxis = d3.scaleLinear().range([0, dim.h / 3]).domain([0, maxTotal]);
 
     const g = d3.select('.svg-g');
+
     // add line graph by each byLat
     for (const lat of data.by_latittude) {
       const line = d3.line()
@@ -101,21 +103,59 @@ class RidgePlots extends Component {
       .style('stroke', '#cccccc');
   }
 
+  _drawParks() {
+    const plotHeight = 60; // base height of each plot
+    const plotDist = 14; // distance between two plots
+    const yRatio = 4; // magnifying ratio of plotting value to plot height
+    const dim = {w: 600, h: plotDist * data.parks.length};
+    // have margin on the top above the line
+    const margin = {top: plotHeight * yRatio + 20, right: 20, bottom: 40, left: 60};
+    const g = d3.select('#ridge-plots')
+      .attr('width', dim.w + margin.left + margin.right)
+      .attr('height', dim.h + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    const x = d3.scaleLinear().range([0, dim.w]).domain([0, 15]);
+    const maxMonthly = _.max(data.parks.map(d => _.max(d.by_month)));
+    const y = d3.scaleLinear().range([0, plotHeight]).domain([0, maxMonthly / yRatio]);
+    const line = d3.line()
+      .x((d, i) => x(i))
+      .y(d => -y(d));
+
+    // TODO: get total number in int format
+    const ordered = _.orderBy(data.parks, d => parseInt(d.total.split(',').join(''))).reverse();
+    for (let i in ordered) {
+      g.append('path')
+        .datum(_.concat([0, 0], ordered[i].by_month, [0, 0]))
+        .attr('fill', 'white')
+        .attr('fill-opacity', 0.8)
+        .attr('stroke', 'black')
+        .attr('stroke-linejoin', 'round')
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-width', 1.5)
+        .attr('d', line)
+        .attr('transform', `translate(0, ${+i * plotDist})`);
+    }
+  }
+
   componentDidMount() {
     const dim = {w: 1600, h: 600};
     this._drawWorldMap(dim);
-    this._drawRidgeGraph(dim);
+    this._drawOverview(dim);
+    this._drawParks();
   }
+
 
   render() {
     return (
-      <div>
-        <div className="map-wrapper">
-          <svg id="worldmap" />
+        <div>
+          <svg className="map-wrapper" id="worldmap" />
+          <svg id="ridge-plots" />
         </div>
-      </div>
     );
   }
 }
+
 
 export default RidgePlots;

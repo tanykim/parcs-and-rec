@@ -11,7 +11,7 @@ def get_visitor_counts(id):
 
     # get the latest year, monthly visitor data is updated in the early time of the following month
     latest_year = bs.find('div', string='Year').parent.parent.next_sibling.contents
-    total = int(latest_year[len(latest_year) - 1].get_text().replace(',', ''))
+    total = latest_year[len(latest_year) - 1].get_text()
     data_by_month = []
     for month in latest_year[1:len(latest_year) - 1]:
         # if the data is not updated, set it 0

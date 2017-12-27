@@ -1,6 +1,7 @@
 # python
 data-generation/venv/
 data-generation/.idea/
+data-generation/keys.json
 
 # react app dependencies
 react-app/node_modules

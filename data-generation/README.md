@@ -14,7 +14,20 @@ Run ```get-national-parks-location.py```. This produces ```csv/national_parks_lo
 
 ## Step 3. Get the park visitor info
 
-Run ```get-national-parks-location.py```. This produces ```csv/national_parks_visitors.json```.
+Run ```get-national-parks-visitors.py```. This produces ```csv/national_parks_visitors.json```.
+
+## Step 4. Get weather data
+
+We are scrapping the monthly weather data from [Weather Underground](http://www.wunderground.com), to retrieve the urls of each national park, we need to know the station code of each locaton. To do that we use its API and look up geo information. To acquire the API key, please visit [here](https://www.wunderground.com/weather/api).
+
+Update ```keys.local``` file with the API key. Then run
+```
+cp keys.local keys.json
+```
+
+Run ```get-weather-station.py``` to get the station code of each national parks. No results are given for the four parks (care, glac, noca, romo), so their codes are manually entered. This provides ```csv/nationa_parks_station.json```.
+
+Run ```get-weather-data.py``` to get the monthly weather data. This provides ```csv/national_parks_weather.json```.
 
 ## Step 4. Get the final dataset
 

@@ -27,7 +27,7 @@ class RidgePlots extends Component {
       // scale up the boundary path
       d3
         .select('.svg-g')
-        .style('stroke-width', 1.5 / d3.event.transform.k + 'px')
+        .style('stroke-width', 1.2 / d3.event.transform.k + 'px')
         .attr('transform', d3.event.transform);
     });
 
@@ -49,6 +49,7 @@ class RidgePlots extends Component {
         .datum(lat.parks_data)
         .attr('fill', 'white')
         .attr('stroke', lat.parks_data.length > 2 ? 'green' : '#efefef')
+        .attr('stroke-width', 1.2)
         .attr('stroke-linejoin', 'round')
         .attr('stroke-linecap', 'round')
         .attr('d', line);
@@ -65,7 +66,7 @@ class RidgePlots extends Component {
       .style('fill', 'red')
       .style('opacity', 0.2)
       .on('mouseover', d => {
-        console.log(d.name, d.state_abbr, d.total);
+        console.log(d.name, d.state, d.total);
       });
   }
 
@@ -123,14 +124,18 @@ class RidgePlots extends Component {
       .x((d, i) => x(i))
       .y(d => -y(d));
 
-    // TODO: get total number in int format
-    const ordered = _.orderBy(data.parks, d => parseInt(d.total.split(',').join(''))).reverse();
+    const color = d3.scaleThreshold()
+        .domain(data.seasonal_domain)
+        .range(['#fafad2','#d0e2aa','#a6c983','#7eb060','#56973e','#2d7e1c','#006400']);
+
+    const ordered = _.orderBy(data.parks, d => d.total).reverse();
     for (let i in ordered) {
+      const c = color(ordered[i].seasonal);
       g.append('path')
         .datum(_.concat([0, 0], ordered[i].by_month, [0, 0]))
-        .attr('fill', 'white')
-        .attr('fill-opacity', 0.8)
-        .attr('stroke', 'black')
+        .attr('fill', c)
+        // .attr('fill-opacity', 0.8)
+        .attr('stroke', c)
         .attr('stroke-linejoin', 'round')
         .attr('stroke-linecap', 'round')
         .attr('stroke-width', 1.5)

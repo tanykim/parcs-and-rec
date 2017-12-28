@@ -52,5 +52,5 @@ with open('csv/national_parks_station.json', 'r', encoding='utf8') as f:
         for month in range(1, 13):
             print (park, month)
             by_month.append(dict(month=month, data=get_weather_data(month, park)))
-        by_park[park['id']] = by_month
+        by_park[key] = by_month
     save_as_json(by_park)

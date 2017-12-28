@@ -7,7 +7,6 @@ import * as topojson from 'topojson';
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-const data = require('./data/data.json');
 const world = require('./data/worldmap-110m.json');
 const usa = require('./data/usa-110m.json');
 
@@ -25,8 +24,7 @@ class RidgePlots extends Component {
         .attr('transform', d3.event.transform);
     });
 
-  _drawOverview(dim) {
-
+  _drawOverview(data, dim) {
     // max total points
     const maxTotal = data.max_total_visitor;
     const valAxis = d3.scaleLinear().range([0, dim.h / 3]).domain([0, maxTotal]);
@@ -141,7 +139,7 @@ class RidgePlots extends Component {
       .attr('d', d3.select(`.js-country-path-${CODE_USA}`).attr('d'));
   }
 
-  _drawParks() {
+  _drawParks(data) {
     const plotHeight = 60; // base height of each plot
     const plotDist = 14; // distance between two plots
     const yRatio = 4; // magnifying ratio of plotting value to plot height
@@ -181,22 +179,28 @@ class RidgePlots extends Component {
     }
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   if (this.props.selectedPark !== nextProps.selectedPark) {
+  //     console.log(nextProps.selectedPark);
+  //   }
+  // }
+
   componentDidMount() {
     const dim = {w: 1600, h: 600};
+    const data = this.props.data;
     this._drawWorldMap(dim);
-    this._drawOverview(dim);
-    this._drawParks();
+    this._drawOverview(data, dim);
+    this._drawParks(data);
   }
-
 
   render() {
     return (
-        <div>
-          <svg className="map-wrapper" id="worldmap">
-            <defs><clipPath id="map-clip-path"></clipPath></defs>
-          </svg>
-          <svg id="ridge-plots" />
-        </div>
+      <div>
+        <svg className="map-wrapper" id="worldmap">
+          <defs><clipPath id="map-clip-path"></clipPath></defs>
+        </svg>
+        <svg id="ridge-plots" />
+      </div>
     );
   }
 }

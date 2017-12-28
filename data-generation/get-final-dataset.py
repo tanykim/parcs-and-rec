@@ -57,6 +57,7 @@ with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
     file = json.load(f)
     data = file
     parks = list(map(lambda x: dict(
+        id=x['id'],
         name=x['name'],
         state=x['state_abbr'],
         by_month=x['by_month'],

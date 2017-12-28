@@ -9,13 +9,7 @@ import React, { Component } from 'react';
 
 const data = require('./data/data.json');
 const world = require('./data/worldmap-110m.json');
-
-// TODO: get only the three countries + state boundaries
-// geo data by country
-const CODE_USA = 840;
-const neighbors = [124, 484]; // Candada and Mexico
-const geoFeatures = topojson.feature(world, world.objects.countries).features
-  .filter(d =>  d.id === CODE_USA || neighbors.indexOf(d.id) > -1);
+const usa = require('./data/usa-110m.json');
 
 class RidgePlots extends Component {
 
@@ -38,21 +32,44 @@ class RidgePlots extends Component {
     const valAxis = d3.scaleLinear().range([0, dim.h / 3]).domain([0, maxTotal]);
 
     const g = d3.select('.svg-g');
-
     // add line graph by each byLat
-    for (const lat of data.by_latittude) {
+    for (const i in data.by_latittude) {
+      const lat = data.by_latittude[i];
+
+      // draw the group of base lines at each latitude
+      // clip the path with the boundary of United States
+      g.selectAll(`.js-lat-lines-${i}`)
+        .data(lat.base_lines)
+        .enter()
+        .append('line')
+        .attr('x1', (d) => this.projection([d[0], lat.lat_rounded])[0])
+        .attr('y1', (d) => this.projection([d[0], lat.lat_rounded])[1])
+        .attr('x2', (d) => this.projection([d[1], lat.lat_rounded])[0])
+        .attr('y2', (d) => this.projection([d[1], lat.lat_rounded])[1])
+        .attr('stroke', lat.parks_data ? 'green' : '#d0e2aa')
+        .attr('stroke-width', 1.2)
+        .attr('class', `js-lat-lines-${i}`)
+        .attr('clip-path', 'url(#map-clip-path)');
+
+      // draw each park, they are not clipped
       const line = d3.line()
         .x(d => this.projection([d[0], 0])[0])
         .y(d => this.projection([0, lat.lat_rounded])[1] - valAxis(d[1]))
         .curve(d3.curveMonotoneX);
-      g.append('path')
-        .datum(lat.parks_data)
-        .attr('fill', 'white')
-        .attr('stroke', lat.parks_data.length > 2 ? 'green' : '#efefef')
-        .attr('stroke-width', 1.2)
-        .attr('stroke-linejoin', 'round')
-        .attr('stroke-linecap', 'round')
-        .attr('d', line);
+
+      if (lat.parks_data) {
+        g.selectAll(`.js-lat-parks-${i}`)
+          .data(lat.parks_data)
+          .enter()
+          .append('path')
+          .datum(d => d)
+          .attr('d', line)
+          .attr('stroke', 'green')
+          .attr('stroke-width', 1.2)
+          .attr('stroke-linecap', 'round')
+          .attr('fill', 'white')
+          .attr('class', `js-lat-parks-${i}`);
+      }
     }
 
     // add mark on each park
@@ -89,19 +106,39 @@ class RidgePlots extends Component {
     svg.call(this.zoom);
     svg.on('click', stopped, true);
 
-    // draw country boundary
+    // geo data
+    const CODE_USA = 840;
+    const neighbors = [124, 484]; // Candada and Mexico
+    const worldPath = topojson.feature(world, world.objects.countries).features
+      .filter(d =>  d.id === CODE_USA || neighbors.indexOf(d.id) > -1);
+    const usaPath = topojson.feature(usa, usa.objects.states).features;
+
+    // draw USA states & country boundary
     const g = svg
       .append('g')
       .attr('class', 'svg-g');
 
-    g.selectAll('.js-country-path')
-      .data(geoFeatures)
+    g.selectAll('.js-usa-path')
+      .data(usaPath)
       .enter()
       .append('path')
       .attr('d', this.path)
-      .attr('class', 'country-path js-country-path')
-      .style('fill', (country) => country.id === CODE_USA ? '#ffffff' : '#efefef')
+      .attr('class', 'usa-path js-usa-path')
+      .style('fill', 'white')
+      .style('stroke', '#efefef');
+    g.selectAll('.js-country-path')
+      .data(worldPath)
+      .enter()
+      .append('path')
+      .attr('d', this.path)
+      .attr('class', (country) => `country-path js-country-path js-country-path-${country.id}`)
+      .style('fill', (country) => country.id === CODE_USA ? 'none' : '#efefef')
       .style('stroke', '#cccccc');
+
+    // make a clipping mask path for the ridge plots from the united states map
+    d3.select('#map-clip-path')
+      .append('path')
+      .attr('d', d3.select(`.js-country-path-${CODE_USA}`).attr('d'));
   }
 
   _drawParks() {
@@ -155,7 +192,9 @@ class RidgePlots extends Component {
   render() {
     return (
         <div>
-          <svg className="map-wrapper" id="worldmap" />
+          <svg className="map-wrapper" id="worldmap">
+            <defs><clipPath id="map-clip-path"></clipPath></defs>
+          </svg>
           <svg id="ridge-plots" />
         </div>
     );

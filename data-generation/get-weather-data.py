@@ -2,11 +2,11 @@ import json
 import urllib.request
 from bs4 import BeautifulSoup
 
-def get_temp_vals(td):
-    return list(map(lambda x: int(x.get_text().strip().replace('\xa0°F', '')), td.find_all('td')[1:]))
+def get_temp_vals(tr):
+    return list(map(lambda x: int(x.get_text().strip().replace('\xa0°F', '')), tr.find_all('td')[1:]))
 
-def get_prec_vals(td):
-    vals = list(map(lambda x: x.get_text().strip().replace('\xa0in', ''), td.find_all('td')[1:]))[:-1]
+def get_prec_vals(tr):
+    vals = list(map(lambda x: x.get_text().strip().replace('\xa0in', ''), tr.find_all('td')[1:]))[:-1]
     return list(map(lambda x: 0 if x == '-' else float(x), vals))
 
 def get_weather_data(month, park):

@@ -7,26 +7,45 @@ def get_points(lat_rounded):
     # parks at the latitude
     parks = list(map(lambda y: [float(y['lon']), int(y['total'].replace(',', ''))],
                 filter(lambda x: round(float(x['lat']) * 2) / 2 == lat_rounded, data)))
-    # add the first graph point
-    parks_data = [[x_domain[0], 0]]
-    # if parks exists get the line graph data
-    if len(parks) > 0:
-        # then add points around parks (+-0.5)
-        ordered = sorted(parks, key=lambda x: x[0])
-        for i in range(len(ordered)):
-            lon = ordered[i][0]
-            # add string point (triangle left cornor)
-            if lon > parks_data[len(parks_data) - 1][0] + 1:
-                parks_data.append([lon - 0.5, 0])
-            # add triangle top
-            parks_data.append(ordered[i])
-            # add ending triangle
-            nextPoint = ordered[i + 1][0] if i < len(ordered) - 1 else x_domain[1]
-            if lon + 1 < nextPoint:
-                parks_data.append([lon + 0.5, 0])
-    parks_data.append([x_domain[1], 0])
 
-    return dict(lat_rounded = lat_rounded, parks_data = parks_data)
+    # if parks exists get the line graph data
+    if len(parks) == 0:
+        return dict(lat_rounded = lat_rounded, base_lines=[x_domain])
+
+    # array of each park triangle point
+    parks_data = []
+
+    # break points are the starting & +-0.5 around each park
+    break_points = [x_domain[0]]
+
+    # then add points around parks (+-0.5)
+    ordered = sorted(parks, key=lambda x: x[0])
+    # iterate each park
+    for i in range(len(ordered)):
+        lon = ordered[i][0]
+        # add starting point, top of triangle, and end point
+        park_points = [[lon - 0.5, 0], ordered[i], [lon + 0.5, 0]]
+        # add break points - remove if the parks area (+-0.5 lon) is overlapped
+        if lon - 0.5 > break_points[len(break_points) - 1]:
+            break_points.append(lon - 0.5)
+            break_points.append(lon + 0.5)
+        else:
+            break_points[len(break_points) - 1] = lon + 0.5
+        # add each park data
+        parks_data.append(park_points)
+
+    # add the very end to the break points
+    break_points.append(x_domain[1])
+
+    # base lines are the group of lines that exclude each park
+    # generate this from the breaking points (always even number)
+    # each item is an array of [start, end] of line
+    base_lines = []
+    for i in range(len(break_points) - 1):
+        if i % 2 == 0:
+            base_lines.append([break_points[i], break_points[i + 1]])
+
+    return dict(lat_rounded = lat_rounded, parks_data = parks_data, base_lines = base_lines)
 
 def frange(start, stop, step, isReverse):
     val = start
@@ -51,7 +70,7 @@ with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
     lon_list = list(map(lambda x: float(x['lon']), data))
     lat_list = list(map(lambda y: float(y['lat']), data))
     x_domain = [math.floor(min(lon_list)), math.ceil(max(lon_list))]
-    y_domain = [math.floor(min(lat_list)), math.ceil(max(lat_list))]
+    y_domain = [math.floor(min(lat_list)), 72] # Alaska top
     seasonals = list(map(lambda x: x['seasonal'], parks))
     seasonal_domain = list(frange(min(seasonals), max(seasonals), (max(seasonals) - min(seasonals)) / 6, False))
 
@@ -70,6 +89,7 @@ json_data = json.dumps(dict(
     by_latittude=by_latitude,
     max_total_visitor=max_total_visitors,
     seasonal_domain=seasonal_domain,
+    x_domain=x_domain,
     weather=weather),
     ensure_ascii=False)
 file.write(json_data)

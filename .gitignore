@@ -6,6 +6,9 @@ data-generation/keys.json
 # react app dependencies
 react-app/node_modules
 
+# css files
+react-app/src/*.css
+
 # testing
 react-app/coverage
 
@@ -14,6 +17,7 @@ react-app/build
 
 # misc
 .DS_Store
+react-app/package-lock.json
 react-app/.env.local
 react-app/.env.development.local
 react-app/.env.test.local

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RidgePlots from './RidgePlots.react';
 import Park from './Park.react';
-import './App.css';
+// import './App.css';
 
 const data = require('./data/data.json');
 

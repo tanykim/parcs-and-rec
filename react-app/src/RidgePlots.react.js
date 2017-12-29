@@ -70,6 +70,8 @@ class RidgePlots extends Component {
       }
     }
 
+    // max radius is 30, proportioanl to the acreage
+    const r = d3.scaleLinear().range([0, 900]).domain([0, data.max_size])
     // add mark on each park
     g.selectAll('circle')
       .data(data.parks)
@@ -77,7 +79,7 @@ class RidgePlots extends Component {
       .append('circle')
       .attr('cx', d => this.projection([d.lon, d.lat])[0])
       .attr('cy', d => this.projection([d.lon, d.lat])[1])
-      .attr('r', 5)
+      .attr('r', d => Math.sqrt(r(d.size)))
       .style('fill', 'red')
       .style('opacity', 0.2)
       .on('mouseover', d => {

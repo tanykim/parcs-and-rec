@@ -2,6 +2,7 @@ import json
 import math
 import statistics
 
+# Ridge graph points
 def get_points(lat_rounded):
 
     # parks at the latitude
@@ -53,6 +54,12 @@ def frange(start, stop, step, isReverse):
         yield val
         val += step
 
+with open('csv/national_parks_size.json', 'r', encoding='utf8') as f:
+    size = json.load(f)
+
+with open('csv/national_parks_weather.json', 'r', encoding='utf8') as f:
+    weather = json.load(f)
+
 with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
     file = json.load(f)
     data = file
@@ -64,7 +71,8 @@ with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
         lon=x['lon'],
         lat=x['lat'],
         total=int(x['total'].replace(',', '')),
-        seasonal=statistics.stdev(x['by_month']) / statistics.mean(x['by_month'])
+        seasonal=statistics.stdev(x['by_month']) / statistics.mean(x['by_month']),
+        size=size[x['id']]
     ), data))
 
     # set graph x and y range
@@ -80,15 +88,13 @@ with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
 
     max_total_visitors = max(list(map(lambda x: x['total'], parks)))
 
-with open('csv/national_parks_weather.json', 'r', encoding='utf8') as f:
-    weather = json.load(f)
-
 # save as final dataset
 file = open('../react-app/src/data/data.json', 'w', encoding='utf8')
 json_data = json.dumps(dict(
     parks=parks,
     by_latittude=by_latitude,
     max_total_visitor=max_total_visitors,
+    max_size=max(size.values()),
     seasonal_domain=seasonal_domain,
     x_domain=x_domain,
     weather=weather),

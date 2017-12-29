@@ -29,6 +29,12 @@ Run ```get-weather-station.py``` to get the station code of each national parks.
 
 Run ```get-weather-data.py``` to get the monthly weather data. This provides ```csv/national_parks_weather.json```.
 
-## Step 4. Get the final dataset
+## Step 5. Get park size
+
+Park size info is ```csv/parks_size```. This file is from traced from this [original data source](https://irma.nps.gov/Stats/FileDownload/1297).
+
+Run ```get-park-size.py```. This file generates ```national_parks_size.csv```.
+
+## Step 6. Get the final dataset
 
 Run ```get-final-dataset.py```. This produces the final json file in ```../react-app/src/data/data.json```.

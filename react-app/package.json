@@ -21,8 +21,10 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.2",
+    "flexboxgrid": "^6.3.1",
+    "flow-bin": "^0.62.0",
     "node-sass": "^4.7.2",
-    "node-sass-watcher": "^0.5.1"
+    "node-sass-watcher": "^0.5.1",
+    "npm-run-all": "^4.1.2"
   }
 }

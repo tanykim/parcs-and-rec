@@ -1,1 +1,39 @@
-/* App css comes here */
+@import './colors.scss';
+
+.app-title {
+  background-color: $bg-title;
+}
+
+.app-map {
+  background-color: $map-water;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.map-wrapper {
+  float: left;
+}
+
+.map-usa-states, .map-usa, .map-neighbor {
+  stroke: $map-path;
+}
+.map-usa-states {
+  fill: $map-usa;
+}
+.map-usa {
+  fill: none;
+}
+.map-neighbor {
+  fill: $map-neighbor;
+}
+.map-park-size {
+  fill: $area;
+}
+.ridge-parks {
+  stroke: $ridge;
+  fill: white;
+  stroke-linecap: round;
+}
+.ridge-blank {
+  stroke: $ridge-blank;
+}

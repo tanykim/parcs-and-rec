@@ -3,4 +3,36 @@ body {
   padding: 0;
   font-family: sans-serif; }
 
-/* App css comes here */
+.app-title {
+  background-color: PaleGoldenrod; }
+
+.app-map {
+  background-color: Azure;
+  padding-right: 0;
+  padding-left: 0; }
+
+.map-wrapper {
+  float: left; }
+
+.map-usa-states, .map-usa, .map-neighbor {
+  stroke: #ccc; }
+
+.map-usa-states {
+  fill: white; }
+
+.map-usa {
+  fill: none; }
+
+.map-neighbor {
+  fill: #efefef; }
+
+.map-park-size {
+  fill: rgba(128, 128, 0, 0.5); }
+
+.ridge-parks {
+  stroke: DarkGreen;
+  fill: white;
+  stroke-linecap: round; }
+
+.ridge-blank {
+  stroke: #efefef; }

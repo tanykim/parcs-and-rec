@@ -34,6 +34,10 @@
   fill: white;
   stroke-linecap: round;
 }
+.ridge-parks.active {
+  fill: $ridge;  
+}
+
 .ridge-blank {
   stroke: $ridge-blank;
 }

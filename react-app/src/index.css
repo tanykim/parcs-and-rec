@@ -34,5 +34,8 @@ body {
   fill: white;
   stroke-linecap: round; }
 
+.ridge-parks.active {
+  fill: DarkGreen; }
+
 .ridge-blank {
   stroke: #efefef; }

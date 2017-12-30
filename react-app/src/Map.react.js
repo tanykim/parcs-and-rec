@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 
 const world = require('./data/worldmap-110m.json');
 const usa = require('./data/usa-110m.json');
+let dim = {};
 
 class Map extends Component {
 
@@ -24,7 +25,33 @@ class Map extends Component {
         .attr('transform', d3.event.transform);
     });
 
-  _drawOverview(data, dim) {
+  _reset(id) {
+    d3.select(`.js-park-ridge-${id}`).classed('active', false);
+    d3.select('#worldmap')
+      .transition()
+      .duration(720)
+      .call(this.zoom.transform, d3.zoomIdentity);
+  }
+
+  _zoom(id) {
+      // TDOO: bring it front when selected, change size circle style
+      d3.select(`.js-park-ridge-${id}`).classed('active', true);
+      const sel = d3.select(`.js-park-${id}`);
+      const x = sel.attr('cx');
+      const y = sel.attr('cy');
+      // TODO: scale dynamically
+      const scale = 10;
+      d3.select('#worldmap')
+        .transition()
+        .call(
+          this.zoom.transform,
+          d3.zoomIdentity
+            .translate(dim.w / 2 - scale * x, dim.h / 2 - scale * y)
+            .scale(scale),
+        );
+  }
+
+  _drawRidges(data) {
     // max total points
     const maxTotal = data.max_total_visitor;
     const valAxis = d3.scaleLinear().range([0, dim.h / 3]).domain([0, maxTotal]);
@@ -54,15 +81,17 @@ class Map extends Component {
         .y(d => this.projection([0, lat.lat_rounded])[1] - valAxis(d[1]))
         .curve(d3.curveMonotoneX);
 
-      if (lat.parks_data) {
-        g.selectAll(`.js-lat-parks-${i}`)
-          .data(lat.parks_data)
-          .enter()
-          .append('path')
-          .datum(d => d)
-          .attr('d', line)
-          .attr('stroke-width', 1.2)
-          .attr('class', `ridge-parks js-lat-parks-${i}`);
+      // park data is an array of three points [x, y] and the id
+      const parks = lat.parks_data;
+      if (parks) {
+        for (let park of parks) {
+          const id = park[3];
+          g.append('path')
+            .datum(park.splice(0, 3))
+            .attr('d', line)
+            .attr('stroke-width', 1.2)
+            .attr('class', `ridge-parks js-park-ridge-${id}`)
+        }
       }
     }
 
@@ -76,13 +105,13 @@ class Map extends Component {
       .attr('cx', d => this.projection([d.lon, d.lat])[0])
       .attr('cy', d => this.projection([d.lon, d.lat])[1])
       .attr('r', d => Math.sqrt(r(d.size)))
-      .attr('class', 'map-park-size')
+      .attr('class', d => `map-park-size js-park-${d.id}`)
       .on('click', d => {
         // console.log(d.name, d.state, d.total);
       });
   }
 
-  _drawWorldMap(dim) {
+  _drawWorldMap() {
     // set the svg
     const svg = d3
       .select('#worldmap')
@@ -135,16 +164,24 @@ class Map extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // when dataset is swtiched
     if (this.props.selectedPark !== nextProps.selectedPark) {
-      console.log(nextProps.selectedPark);
+      // reset previously selected park
+      if (this.props.selectedPark !== '') {
+        this._reset(this.props.selectedPark);
+      }
+      // check if new park is selected
+      if (nextProps.selectedPark !== '') {
+        this._zoom(nextProps.selectedPark);
+      }
     }
   }
 
   componentDidMount() {
-    const dim = {w: this.props.getWidth('map'), h: 600};
+    dim = {w: this.props.getWidth('map'), h: 600};
     const data = this.props.data;
-    this._drawWorldMap(dim);
-    this._drawOverview(data, dim);
+    this._drawWorldMap();
+    this._drawRidges(data);
   }
 
   render() {

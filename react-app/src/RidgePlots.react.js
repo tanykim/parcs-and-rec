@@ -3,7 +3,6 @@
 ******/
 
 import * as d3 from 'd3';
-import * as topojson from 'topojson';
 import _ from 'lodash';
 import React, { Component } from 'react';
 

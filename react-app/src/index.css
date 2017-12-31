@@ -39,3 +39,33 @@ body {
 
 .ridge-blank {
   stroke: #efefef; }
+
+/* ridge plots */
+.ridge-plot-fill {
+  stroke: none; }
+
+.ridge-plot-fill.hover {
+  display: none; }
+
+.ridge-plot-outline {
+  stroke: SaddleBrown;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  stroke-linecap: round; }
+
+.ridge-plot-outline.hover {
+  stroke-width: 2; }
+
+.ridge-plot-name {
+  text-anchor: end;
+  font-size: 10px;
+  cursor: pointer; }
+
+.ridge-g.dimmed .ridge-plot-fill {
+  fill: none !important; }
+
+.ridge-g.dimmed .ridge-plot-outline {
+  stroke: lightGrey; }
+
+.ridge-g.dimmed .ridge-plot-name {
+  fill: lightGrey; }

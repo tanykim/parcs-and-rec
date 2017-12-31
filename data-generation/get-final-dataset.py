@@ -6,7 +6,7 @@ import statistics
 def get_points(lat_rounded):
 
     # parks at the latitude
-    parks = list(map(lambda y: [float(y['lon']), int(y['total'].replace(',', ''))],
+    parks = list(map(lambda y: [float(y['lon']), int(y['total'].replace(',', '')), y['id']],
                 filter(lambda x: round(float(x['lat']) * 2) / 2 == lat_rounded, data)))
 
     # if parks exists get the line graph data
@@ -25,7 +25,7 @@ def get_points(lat_rounded):
     for i in range(len(ordered)):
         lon = ordered[i][0]
         # add starting point, top of triangle, and end point
-        park_points = [[lon - 0.5, 0], ordered[i], [lon + 0.5, 0]]
+        park_points = [[lon - 0.5, 0], ordered[i][0:2], [lon + 0.5, 0], ordered[i][2]]
         # add break points - remove if the parks area (+-0.5 lon) is overlapped
         if lon - 0.5 > break_points[len(break_points) - 1]:
             break_points.append(lon - 0.5)
@@ -71,7 +71,7 @@ with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
         lon=x['lon'],
         lat=x['lat'],
         total=int(x['total'].replace(',', '')),
-        seasonal=statistics.stdev(x['by_month']) / statistics.mean(x['by_month']),
+        # seasonal=statistics.stdev(x['by_month']) / statistics.mean(x['by_month']),
         size=size[x['id']]
     ), data))
 
@@ -80,8 +80,8 @@ with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
     lat_list = list(map(lambda y: float(y['lat']), data))
     x_domain = [math.floor(min(lon_list)), math.ceil(max(lon_list))]
     y_domain = [math.floor(min(lat_list)), 72] # Alaska top
-    seasonals = list(map(lambda x: x['seasonal'], parks))
-    seasonal_domain = list(frange(min(seasonals), max(seasonals), (max(seasonals) - min(seasonals)) / 6, False))
+    # seasonals = list(map(lambda x: x['seasonal'], parks))
+    # seasonal_domain = list(frange(min(seasonals), max(seasonals), (max(seasonals) - min(seasonals)) / 6, False))
 
     # get line graph point data by rounded latitude
     by_latitude = list(map(lambda x: get_points(x), list(frange(y_domain[1], y_domain[0] - 0.5, -0.5, True))))
@@ -94,8 +94,9 @@ json_data = json.dumps(dict(
     parks=parks,
     by_latittude=by_latitude,
     max_total_visitor=max_total_visitors,
+    min_size=min(size.values()),
     max_size=max(size.values()),
-    seasonal_domain=seasonal_domain,
+    # seasonal_domain=seasonal_domain,
     x_domain=x_domain,
     weather=weather),
     ensure_ascii=False)

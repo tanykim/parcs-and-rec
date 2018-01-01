@@ -41,6 +41,9 @@ body {
   stroke: #efefef; }
 
 /* ridge plots */
+.ridge-plots {
+  padding-top: 20px; }
+
 .ridge-plot-fill {
   stroke: none; }
 

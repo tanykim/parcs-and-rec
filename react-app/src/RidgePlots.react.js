@@ -6,9 +6,15 @@ import * as d3 from 'd3';
 import _ from 'lodash';
 import chroma from 'chroma-js';
 import React, { Component } from 'react';
+import Select from 'react-select';
+
+// distance between two plots
+const plotDist = 20;
+const margin = {top: 20, right: 0, bottom: 40, left: 300};
+const dim = {w: null, h: null};
 
 class RidgePlots extends Component {
-  // state = {hovered: ''};
+  state = {sortOption: 'total-desc'};
 
   _highlightPark(id, w) {
     d3.selectAll('.js-ridge-g')
@@ -29,18 +35,10 @@ class RidgePlots extends Component {
 
   _drawParks() {
     const data = this.props.data;
-
     const plotHeight = 240;
-    const plotDist = 20; // distance between two plots
-    // y plot base is value 0, thus add plotHeight to top margin
-    const margin = {top: 20 + plotHeight, right: 0, bottom: 40, left: 300};
-    const dim = {
-      w: this.props.getWidth('ridgePlots') - margin.left - margin.right,
-      h: data.parks.length * plotDist,
-    };
     const svg = d3.select('#ridge-plots')
       .attr('width', dim.w + margin.left + margin.right)
-      .attr('height', dim.h + margin.top + margin.bottom);
+      .attr('height', dim.h + margin.top + margin.bottom + plotHeight);
 
     // add two points on each side of X axis
     const x = d3.scaleLinear().range([0, dim.w]).domain([0, 15]);
@@ -52,16 +50,15 @@ class RidgePlots extends Component {
     const color = chroma.scale(['LightGoldenrodYellow', 'Green', 'DarkGreen'])
       .domain([data.min_size, data.max_size]);
 
-    // TODO: let the sorting available
-    const ordered = _.orderBy(data.parks, d => d.total).reverse();
-
-    for (let i in ordered) {
-      const park = ordered[i];
+    // sort the national parks
+    const sorted = this._sortParks(data.parks, this.state.sortOption);
+    for (let i in sorted) {
+      const park = sorted[i];
       // wrapper
       const g = svg
         .append('g')
         .datum(park.id)
-        .attr('transform', `translate(${margin.left}, ${margin.top + (+i * plotDist)})`)
+        .attr('transform', `translate(${margin.left}, ${margin.top + plotHeight + (+i * plotDist)})`)
         .attr('class', `ridge-g js-ridge-g js-ridge-g-${park.id}`);
       const c = color(park.size);
       let lineData = _.concat([0, 0], park.by_month, [0, 0]);
@@ -77,6 +74,7 @@ class RidgePlots extends Component {
         .datum(lineData)
         .attr('d', line)
         .attr('fill', c)
+        .attr('max', y(_.max(park.by_month)))
         .attr('class', `ridge-plot-outline js-ridge-outlines js-ridge-outline-${park.id}`)
         .on('mouseover', () => {
           this._highlightPark(park.id, dim.w);
@@ -108,13 +106,78 @@ class RidgePlots extends Component {
   //   }
   // }
 
+  _sortParks = (parks, optionVal) => {
+    const option = optionVal.split('-');
+    let sorted = _.orderBy(parks, d => d[option[0]]);
+    sorted = option[1] === 'desc' ? sorted.reverse() : sorted;
+    return sorted;
+  }
+
+  _onOptionChange = (sortOption) => {
+    const optionVal = sortOption.value;
+    // replacing place holder text
+    this.setState({sortOption: optionVal});
+
+    // sort the parks
+    const sorted = this._sortParks(this.props.data.parks, optionVal);
+    const parentNode = d3.select('#ridge-plots').node();
+    // set the offset between margin top and the plot base)
+    let maxY;
+    for (let i in sorted) {
+      const val = +d3.select(`.js-ridge-outline-${sorted[i].id}`).attr('max');
+      if (+i === 0) {
+        maxY = val;
+      // check if the following parks height go over the maxY
+    } else if (Math.max(val, +i * plotDist) > maxY) {
+        maxY = Math.max(maxY, val - +i * plotDist);
+      }
+    }
+    // animate the vertical position of each park
+    for (let j in sorted) {
+      const park = sorted[j];
+      const sel = d3.select(`.js-ridge-g-${park.id}`);
+      // rearrange; bring front to the vis
+      parentNode.appendChild(sel.node());
+      sel.transition()
+        .attr('transform', `translate(${margin.left}, ${margin.top + maxY + (+j * plotDist)})`);
+    }
+
+  }
+
   componentDidMount() {
+    dim.w = this.props.getWidth('ridgePlots') - margin.left - margin.right;
+    dim.h = this.props.data.parks.length * plotDist;
     this._drawParks();
   }
 
   render() {
     return (
-      <svg id="ridge-plots" className="ridge-plots-wrapper"/>
+      <div className="row ridge-plots">
+        <div className="col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+          <Select
+            clearable={false}
+            searchable={false}
+            value={this.state.sortOption}
+            placeholder="Sort parks by"
+            onChange={this._onOptionChange}
+            options = {[
+              {label: 'Name: A to Z', value: 'name-asc'},
+              {label: 'Name: Z to A', value: 'name-desc'},
+              {label: 'Total visitors: large to small', value: 'total-desc'},
+              {label: 'Total visitors: small to large', value: 'total-asc'},
+              {label: 'Size: large to small', value: 'size-desc'},
+              {label: 'Size: small to large', value: 'size-asc'},
+              {label: 'Location: west to east', value: 'lon-asc'},
+              {label: 'Location: east to west', value: 'lon-desc'},
+              {label: 'Location: north to south', value: 'lat-desc'},
+              {label: 'Location: south to north', value: 'lat-asc'},
+            ]}
+          />
+        </div>
+        <div className="col-xs-12">
+          <svg id="ridge-plots" className="ridge-plots-wrapper"/>
+        </div>
+      </div>
     );
   }
 }

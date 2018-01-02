@@ -47,10 +47,8 @@ body {
 .ridge-plot-fill {
   stroke: none; }
 
-.ridge-plot-fill.hover {
-  display: none; }
-
 .ridge-plot-outline {
+  fill: none;
   stroke: SaddleBrown;
   stroke-width: 1;
   stroke-linejoin: round;

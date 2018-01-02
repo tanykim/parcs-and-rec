@@ -49,11 +49,9 @@
 .ridge-plot-fill {
   stroke: none;
 }
-.ridge-plot-fill.hover {
-  display: none;
-}
 
 .ridge-plot-outline {
+  fill: none;
   stroke: $dark;
   stroke-width: 1;
   stroke-linejoin: round;

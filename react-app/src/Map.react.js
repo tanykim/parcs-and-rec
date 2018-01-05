@@ -5,6 +5,7 @@
 
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 const world = require('./data/worldmap-110m.json');
@@ -26,16 +27,26 @@ class Map extends Component {
     });
 
   _reset(id) {
-    d3.select(`.js-park-ridge-${id}`).classed('active', false);
+    d3.select(`.js-park-ridge-${id}`)
+      .classed('active', false)
+      .classed('defocused', false);
     d3.select('#worldmap')
       .transition()
       .duration(720)
       .call(this.zoom.transform, d3.zoomIdentity);
   }
 
+  _defocus(id) {
+    d3.select(`.js-park-ridge-${id}`)
+      .classed('active', false)
+      .classed('defocused', true);
+  }
+
   _zoom(id) {
       // TDOO: bring it front when selected, change size circle style
-      d3.select(`.js-park-ridge-${id}`).classed('active', true);
+      d3.select(`.js-park-ridge-${id}`)
+        .classed('active', true)
+        .classed('defocused', false);
       const sel = d3.select(`.js-park-${id}`);
       const x = sel.attr('cx');
       const y = sel.attr('cy');
@@ -107,7 +118,10 @@ class Map extends Component {
       .attr('r', d => Math.sqrt(r(d.size)))
       .attr('class', d => `map-park-size js-park-${d.id}`)
       .on('click', d => {
-        // console.log(d.name, d.state, d.total);
+        // check if already selected
+        if (this.props.selections.map(p => p.value).indexOf(d.id) === -1) {
+          this.props.onSelectPark(d.id);
+        }
       });
   }
 
@@ -165,14 +179,30 @@ class Map extends Component {
 
   componentWillReceiveProps(nextProps) {
     // when dataset is swtiched
-    if (this.props.selectedPark !== nextProps.selectedPark) {
-      // reset previously selected park
-      if (this.props.selectedPark !== '') {
-        this._reset(this.props.selectedPark);
-      }
+    if (this.props.selections.length !== nextProps.selections.length) {
       // check if new park is selected
-      if (nextProps.selectedPark !== '') {
-        this._zoom(nextProps.selectedPark);
+      if (nextProps.selections.length > this.props.selections.length) {
+        // zoom in to the new park
+        this._zoom(nextProps.selections[nextProps.selections.length - 1].value);
+
+        // dehighlight the previous parks
+        if (this.props.selections.length > 0) {
+          for (let sel of this.props.selections) {
+            this._defocus(sel.value);
+          }
+        }
+      // if park(s) deselected
+      } else {
+        const current = this.props.selections.map(p => p.value);
+        const next = nextProps.selections.map(p => p.value);
+        const removedParks = _.difference(current, next);
+        for (let park of removedParks) {
+          this._reset(park);
+        }
+        // zoom to the last selected one
+        if (next.length > 0) {
+          this._zoom(next[next.length -1]);
+        }
       }
     }
   }

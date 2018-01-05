@@ -12,20 +12,23 @@ import Select from 'react-select';
 const plotDist = 20;
 const margin = {top: 20, right: 0, bottom: 40, left: 300};
 const dim = {w: null, h: null};
+// height of the selected park
+const plotHeight = 240;
 let maxY;
 const detailH = 300;
 const line = d3.line();
 
 class RidgePlots extends Component {
-  state = {sortOption: 'total-desc', selectedPark: null};
+  state = {sortOption: 'total-desc'};
 
+  // resize the svg after reorder & park selection
   _resizeWrapperHeight() {
     d3.select('#ridge-plots')
-      .attr('height', dim.h + margin.top + margin.bottom + maxY + (this.state.selectedPark && detailH));
+      .attr('height', dim.h + margin.top + margin.bottom + maxY + (this.props.selections.length > 0 && detailH));
   }
 
+  // show detailed vis of the selected park
   _showDetail(order, id) {
-    this.setState({selectedPark: id});
     // move down parks below the selected one
     d3.selectAll('.js-ridge-g')
       .attr('transform', function() {
@@ -35,24 +38,71 @@ class RidgePlots extends Component {
     this._resizeWrapperHeight();
   }
 
-  _highlightPark(id, isSwitch) {
+  _dimParks(id) {
     d3.selectAll('.js-ridge-g')
       .filter(d => d !== id)
       .classed('dimmed', true)
       .selectAll('.js-ridge-outlines').attr('d', `M0,0h${dim.w}`);
-    d3.select(`.js-ridge-outline-${id}`).classed('hover', true);
   }
 
-  _revertParks(id) {
+  // mouse actions only when no parks are selected
+  _mouseOver(id) {
+    this._dimParks(id);
+    d3.select(`.js-ridge-outline-${id}`).classed('active', true);
+  }
+  _mouseOut(id) {
     d3.selectAll('.js-ridge-g')
       .classed('dimmed', false)
       .selectAll('.js-ridge-outlines').attr('d', line);
-    d3.select(`.js-ridge-outline-${id}`).classed('hover', false);
+    d3.select(`.js-ridge-outline-${id}`).classed('active', false);
+  }
+
+  // when a park is selected
+  _highlightPark(id, hasPrev) {
+    !hasPrev && this._dimParks(id);
+    d3.select(`.js-ridge-g-${id}`)
+      .classed('dimmed', false)
+      .classed('defocused', false);
+    d3.select(`.js-ridge-outline-${id}`).attr('d', line).classed('active', true);
+  }
+
+  // when a new park is selected, defocus previously selected ones
+  _defocus(id) {
+    d3.select(`.js-ridge-g-${id}`)
+      .classed('dimmed', false)
+      .classed('defocused', true);
+    d3.select(`.js-ridge-outline-${id}`)
+      .attr('d', line)
+      .classed('active', false);
+  }
+
+  // when a park is deselected (still there's a selected one)
+  // reset to the dimmed status
+  _reset = (id) => {
+    d3.select(`.js-ridge-g-${id}`)
+      .classed('dimmed', true)
+      .classed('defocused', false);
+    d3.select(`.js-ridge-outline-${id}`)
+      .classed('active', false);
+  }
+
+  // revert to the normal status
+  _revertToNormal = () => {
+    // move up the parks below the previously selected park
+    d3.selectAll('.js-ridge-g')
+      .classed('dimmed', false)
+      .classed('defocused', false)
+      .attr('transform', function() {
+        const order = +d3.select(this).attr('order');
+        return `translate(${margin.left}, ${margin.top + plotHeight + (order * plotDist)})`;
+      })
+    d3.selectAll('.js-ridge-outlines').attr('d', line);
+    // TOOD: fix the resize
+    this._resizeWrapperHeight();
   }
 
   _drawParks() {
     const data = this.props.data;
-    const plotHeight = 240;
     maxY = plotHeight;
     const svg = d3.select('#ridge-plots')
       .attr('width', dim.w + margin.left + margin.right)
@@ -81,22 +131,15 @@ class RidgePlots extends Component {
         .attr('transform', `translate(${margin.left}, ${margin.top + plotHeight + (+i * plotDist)})`)
         .attr('class', `ridge-g js-ridge-g js-ridge-g-${park.id}`)
         .on('mouseover', () => {
-          !this.state.selectedPark && this._highlightPark(park.id);
+          this.props.selections.length === 0 && this._mouseOver(park.id);
         })
         .on('mouseout', () => {
-          !this.state.selectedPark && this._revertParks(park.id);
+          this.props.selections.length === 0 && this._mouseOut(park.id);
         })
         .on('click', () => {
-          const order = +d3.select(`.js-ridge-g-${park.id}`).attr('order');
-          if (park.id !== this.state.selectedPark) {
-            // for the case of swtiching
-            if (this.state.selectedPark) {
-              this._revertParks(this.state.selectedPark);
-            }
-            this._showDetail(order, park.id);
-            this._highlightPark(park.id);
-          } else { // toggle effects
-            this._clearSelection();
+          // const order = +d3.select(`.js-ridge-g-${park.id}`).attr('order');
+          if (this.props.selections.map(p => p.value).indexOf(park.id) === -1) {
+            this.props.onSelectPark(park.id);
           }
         });
       const c = color(park.size);
@@ -144,8 +187,8 @@ class RidgePlots extends Component {
       if (+i === 0) {
         maxY = val;
       } else if (Math.max(val, +i * plotDist) > maxY) {
-          maxY = Math.max(maxY, val - +i * plotDist);
-        }
+        maxY = Math.max(maxY, val - +i * plotDist);
+      }
     }
     // animate the vertical position of each park
     let hasSelectedPark = false;
@@ -161,30 +204,14 @@ class RidgePlots extends Component {
         .duration(1200)
         .attr('transform', `translate(${margin.left}, ${yPos})`);
       // keep distance if a park is selected
-      if (park.id === this.state.selectedPark) {
-        hasSelectedPark = true;
+      if (this.props.selections.length > 0) {
+        if (park.id === this.props.selections[this.props.selections.length - 1].value) {
+          hasSelectedPark = true;
+        }
       }
     }
     //resize the svg
     this._resizeWrapperHeight();
-  }
-
-  _clearSelection = () => {
-    const id = this.state.selectedPark;
-    // revert the highlight presentation to normal state
-    this._revertParks(id);
-    // move up the parks below the previously selected park
-    d3.selectAll('.js-ridge-g')
-      .filter(function() {
-        return +d3.select(this).attr('order') > +d3.select(`.js-ridge-g-${id}`).attr('order');
-      })
-      .attr('transform', function() {
-        const t = d3.select(this).attr('transform').split(',');
-        return `${t[0]}, ${+t[1].slice(0, -1) - detailH})`;
-      });
-    this._resizeWrapperHeight();
-    // update the state
-    this.setState({selectedPark: null});
   }
 
   componentDidMount() {
@@ -194,21 +221,44 @@ class RidgePlots extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.selectedPark !== nextProps.selectedPark) {
-      // revert park if a park is already selected
-      if (this.state.selectedPark) {
-        this._revertParks(this.state.selectedPark);
-      }
-      const id = nextProps.selectedPark;
-      if (id) {
-        // if a park is selected
+    // when dataset is swtiched
+    if (this.props.selections.length !== nextProps.selections.length) {
+      // check if new park is selected
+      if (nextProps.selections.length > this.props.selections.length) {
+        // highlight the park
+        const id = nextProps.selections[nextProps.selections.length - 1].value;
         this._highlightPark(id);
         this._showDetail(+d3.select(`.js-ridge-g-${id}`).attr('order'), id);
+        // dehighlight the previous parks
+        if (this.props.selections.length > 0) {
+          for (let sel of this.props.selections) {
+            this._defocus(sel.value);
+          }
+        }
+      // if park(s) deselected
       } else {
-        // no park is selected after clearning
-        this._clearSelection();
+        const current = this.props.selections.map(p => p.value);
+        const next = nextProps.selections.map(p => p.value);
+        const removedParks = _.difference(current, next);
+        // still selected parks are remained
+        if (next.length > 0 ) {
+          for (let park of removedParks) {
+            console.log('------removed', park);
+            this._reset(park);
+          }
+          for (let i = 0; i < next.length - 1; i++) {
+            console.log(next[i]);
+            this._defocus(next[i]);
+          }
+          const id = next[next.length -1];
+          this._highlightPark(id, true);
+          this._showDetail(+d3.select(`.js-ridge-g-${id}`).attr('order'), id);
+        } else {
+          this._revertToNormal();
+        }
       }
     }
+
   }
 
   render() {
@@ -234,7 +284,6 @@ class RidgePlots extends Component {
               {label: 'Location: south to north', value: 'lat-asc'},
             ]}
           />
-          { this.state.selectedPark && <span onClick={this._clearSelection}>Clear</span>}
         </div>
         <div className="col-xs-12">
           <svg id="ridge-plots" className="ridge-plots-wrapper"/>

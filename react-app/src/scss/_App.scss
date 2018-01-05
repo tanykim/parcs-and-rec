@@ -37,6 +37,9 @@
 .ridge-parks.active {
   fill: $ridge;
 }
+.ridge-parks.defocused {
+  fill: $dark;
+}
 
 .ridge-blank {
   stroke: $ridge-blank;
@@ -57,14 +60,28 @@
   stroke-linejoin: round;
   stroke-linecap: round;
 }
-.ridge-plot-outline.hover {
+.ridge-plot-outline.active {
   stroke-width: 2;
 }
+
 .ridge-plot-name {
   text-anchor: end;
   font-size: 10px;
   cursor: pointer;
 }
+.ridge-g.defocused {
+  .ridge-plot-fill {
+    fill: none !important;
+  }
+  .ridge-plot-outline {
+    stroke: grey;
+  }
+  .ridge-plot-name {
+    fill: grey;
+  }
+}
+
+/* dimmmed comes later than defocused for overriding */
 .ridge-g.dimmed {
   .ridge-plot-fill {
     fill: none !important;
@@ -75,4 +92,11 @@
   .ridge-plot-name {
     fill: lightGrey;
   }
+}
+
+/* overrise */
+.Select-multi-value-wrapper {
+    .Select-value {
+      color: $ridge;
+    }
 }

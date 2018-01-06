@@ -121,6 +121,8 @@ class Map extends Component {
         // check if already selected
         if (this.props.selections.map(p => p.value).indexOf(d.id) === -1) {
           this.props.onSelectPark(d.id);
+        } else {
+          this.props.onUnselectPark(d.id);
         }
       });
   }

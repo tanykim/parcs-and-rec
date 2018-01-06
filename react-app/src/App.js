@@ -18,23 +18,24 @@ class App extends Component {
     return this._wrapper[type]=== null ? 800 : this._wrapper[type].offsetWidth;
   }
 
-  _setState(option) {
-    this.setState({selections: option, isMultiMax: false});
-  }
-
   _onParkSelected = (option) => {
     this.setState({isMultiMax: option.length === MULTI_MAX + 1});
     // if selection already reached the max, do not add more
     if (option.length === MULTI_MAX + 1) {
       return;
     }
-    this._setState(option);
+    this.setState({selections: option});
   }
 
   _selectPark = (id) => {
     const park = data.parks.filter(park => park.id === id)[0];
     const option = [{value: park.id, label: park.name}];
     this._onParkSelected(this.state.selections.concat(option));
+  }
+
+  _unselectPark = (id) => {
+    const newOption = this.state.selections.filter(sel => sel.value !== id);
+    this.setState({selections: newOption, isMultiMax: false});
   }
 
   render() {
@@ -47,6 +48,7 @@ class App extends Component {
               data={data}
               selections={this.state.selections}
               onSelectPark={this._selectPark}
+              onUnselectPark={this._unselectPark}
               getWidth={this._getWidth} />
           </div>
           <div className="col-xs-12 col-md-5 col-lg-4 first-xs app-title">
@@ -75,6 +77,7 @@ class App extends Component {
               data={data}
               selections={this.state.selections}
               onSelectPark={this._selectPark}
+              onUnselectPark={this._unselectPark}
               getWidth={this._getWidth} />
           </div>
         </div>

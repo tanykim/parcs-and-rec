@@ -137,9 +137,11 @@ class RidgePlots extends Component {
           this.props.selections.length === 0 && this._mouseOut(park.id);
         })
         .on('click', () => {
-          // const order = +d3.select(`.js-ridge-g-${park.id}`).attr('order');
+          // select park if this park isn't selected
           if (this.props.selections.map(p => p.value).indexOf(park.id) === -1) {
             this.props.onSelectPark(park.id);
+          } else {
+            this.props.onUnselectPark(park.id);
           }
         });
       const c = color(park.size);
@@ -161,7 +163,13 @@ class RidgePlots extends Component {
         .text(park.name.replace('National Park', 'NP').replace(' & Preserve', '&P'))
         .attr('x', 0)
         .attr('y', plotDist / 2)
-        .attr('class', 'ridge-plot-name');
+        .attr('class', 'ridge-plot-name')
+        .on('mouseover', function() {
+          d3.select(this).classed('hover', true);
+        })
+        .on('mouseout', function() {
+          d3.select(this).classed('hover', false);
+        });
     }
   }
 

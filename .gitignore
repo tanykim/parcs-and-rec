@@ -26,3 +26,5 @@ react-app/.env.production.local
 react-app/npm-debug.log*
 react-app/yarn-debug.log*
 react-app/yarn-error.log*
+
+react-app/src/*_old.*

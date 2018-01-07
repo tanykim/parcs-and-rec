@@ -7,35 +7,42 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 import React, { Component } from 'react';
 import Select from 'react-select';
+import Park from './Park.react';
 
 // distance between two plots
 const plotDist = 20;
-const margin = {top: 20, right: 0, bottom: 40, left: 300};
+const margin = {top: 60, right: 0, bottom: 40, left: 300, month: 20};
 const dim = {w: null, h: null};
 // height of the selected park
 const plotHeight = 240;
 let maxY;
-const detailH = 300;
+// needed for details of selected park
+const chartH = 200;
+const dist = {bar: plotDist * 2 + 40, temp: 40};
+const detailH = chartH * 2 + dist.bar + dist.temp;
 const line = d3.line();
+const x = d3.scaleLinear();
+const y = d3.scaleLinear().range([0, plotHeight]);
 
 class RidgePlots extends Component {
-  state = {sortOption: 'total-desc'};
+  state = {sortOption: 'total-desc', selectedOrder: -1};
 
   // resize the svg after reorder & park selection
-  _resizeWrapperHeight() {
+  _resizeWrapperHeight(len) {
+    console.log(len, maxY);
     d3.select('#ridge-plots')
-      .attr('height', dim.h + margin.top + margin.bottom + maxY + (this.props.selections.length > 0 && detailH));
+      .attr('height', dim.h + margin.top + margin.bottom + maxY + (len > 0 && detailH));
   }
 
   // show detailed vis of the selected park
-  _showDetail(order, id) {
-    // move down parks below the selected one
+  _getSelectedParkOrder(order, len) {
     d3.selectAll('.js-ridge-g')
       .attr('transform', function() {
         const o = +d3.select(this).attr('order');
         return `translate(${margin.left}, ${margin.top + maxY + (o > order ? detailH : 0) + (o * plotDist)})`
       });
-    this._resizeWrapperHeight();
+    this.setState({selectedOrder: order});
+    this._resizeWrapperHeight(len);
   }
 
   _dimParks(id) {
@@ -83,6 +90,7 @@ class RidgePlots extends Component {
       .classed('dimmed', true)
       .classed('defocused', false);
     d3.select(`.js-ridge-outline-${id}`)
+      .attr('d', `M0,0h${dim.w}`)
       .classed('active', false);
   }
 
@@ -94,11 +102,10 @@ class RidgePlots extends Component {
       .classed('defocused', false)
       .attr('transform', function() {
         const order = +d3.select(this).attr('order');
-        return `translate(${margin.left}, ${margin.top + plotHeight + (order * plotDist)})`;
+        return `translate(${margin.left}, ${margin.top + maxY + (order * plotDist)})`;
       })
     d3.selectAll('.js-ridge-outlines').attr('d', line);
-    // TOOD: fix the resize
-    this._resizeWrapperHeight();
+    this._resizeWrapperHeight(0);
   }
 
   _drawParks() {
@@ -109,10 +116,10 @@ class RidgePlots extends Component {
       .attr('height', dim.h + margin.top + margin.bottom + plotHeight);
 
     // add two points on each side of X axis
-    const x = d3.scaleLinear().range([0, dim.w]).domain([0, 15]);
+    x.range([0, dim.w]).domain([0, 15]);
     const maxMonthly = _.max(data.parks.map(d => _.max(d.by_month)));
     // since the y base is 0, do not swap range
-    const y = d3.scaleLinear().range([0, plotHeight]).domain([0, maxMonthly]);
+    y.domain([0, maxMonthly]);
     line.x((d, i) => x(i)).y(d => -y(d));
 
     // fill the ridge graph with the size of the park
@@ -215,11 +222,16 @@ class RidgePlots extends Component {
       if (this.props.selections.length > 0) {
         if (park.id === this.props.selections[this.props.selections.length - 1].value) {
           hasSelectedPark = true;
+          this.setState({selectedOrder: +j});
         }
       }
     }
+    // bring the detail to the front
+    if (this.props.selections.length > 0) {
+      parentNode.appendChild(d3.select('.js-ridge-detail').node());
+    }
     //resize the svg
-    this._resizeWrapperHeight();
+    this._resizeWrapperHeight(this.props.selections.length);
   }
 
   componentDidMount() {
@@ -236,7 +248,7 @@ class RidgePlots extends Component {
         // highlight the park
         const id = nextProps.selections[nextProps.selections.length - 1].value;
         this._highlightPark(id);
-        this._showDetail(+d3.select(`.js-ridge-g-${id}`).attr('order'), id);
+        this._getSelectedParkOrder(+d3.select(`.js-ridge-g-${id}`).attr('order'), nextProps.selections.length);
         // dehighlight the previous parks
         if (this.props.selections.length > 0) {
           for (let sel of this.props.selections) {
@@ -251,18 +263,16 @@ class RidgePlots extends Component {
         // still selected parks are remained
         if (next.length > 0 ) {
           for (let park of removedParks) {
-            console.log('------removed', park);
             this._reset(park);
           }
           for (let i = 0; i < next.length - 1; i++) {
-            console.log(next[i]);
             this._defocus(next[i]);
           }
           const id = next[next.length -1];
           this._highlightPark(id, true);
-          this._showDetail(+d3.select(`.js-ridge-g-${id}`).attr('order'), id);
+          this._getSelectedParkOrder(+d3.select(`.js-ridge-g-${id}`).attr('order'), nextProps.selections.length);
         } else {
-          this._revertToNormal();
+          this._revertToNormal(nextProps.selections.length);
         }
       }
     }
@@ -270,6 +280,14 @@ class RidgePlots extends Component {
   }
 
   render() {
+    // selected park data
+    let data = null;
+    if (this.props.selections.length > 0) {
+      const id = this.props.selections[this.props.selections.length - 1].value;
+      const park = this.props.data.parks.filter(park => park.id === id)[0];
+      const temperature = this.props.data.weather[id].map(d => d.data.temperature).map(d => d.mean)
+      data = {visitors: park.by_month, id, temperature};
+    }
     return (
       <div className="row ridge-plots">
         <div className="col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
@@ -294,12 +312,25 @@ class RidgePlots extends Component {
           />
         </div>
         <div className="col-xs-12">
-          <svg id="ridge-plots" className="ridge-plots-wrapper"/>
+          <svg id="ridge-plots" className="ridge-plots-wrapper">
+          {this.props.selections.length > 0 &&
+            <Park
+              selectedOrder={this.state.selectedOrder}
+              selectedParkId={data ? data.id : null}
+              margin={margin}
+              maxY={maxY}
+              plotDist={plotDist}
+              chartH={chartH}
+              dist={dist}
+              x={x}
+              y={y}
+              data={data}
+            />}
+          </svg>
         </div>
       </div>
     );
   }
 }
-
 
 export default RidgePlots;

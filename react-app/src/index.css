@@ -47,6 +47,14 @@ body {
 .ridge-plots {
   padding-top: 20px; }
 
+.ridge-month .month-label {
+  font-size: 10px;
+  fill: grey;
+  text-anchor: middle; }
+
+.ridge-month .month-line {
+  stroke: lightGrey; }
+
 .ridge-plot-fill {
   stroke: none; }
 

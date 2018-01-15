@@ -3,13 +3,14 @@
 ******/
 
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 
 import SizeAndVisitor from './SizeAndVisitor.react';
+import Visitors from './Visitors.react';
 
 class Comparison extends Component {
   _wrapper = {
     sizeAndVisitor: null,
+    visitors: null,
   };
 
   _getWidth = (type) => {
@@ -30,6 +31,10 @@ class Comparison extends Component {
         <div className="col-xs-12 col-md-6 col-lg-4">
           <div ref={div => {this._wrapper.sizeAndVisitor = div;}} />
           <SizeAndVisitor {...this.props} getWidth={this._getWidth}/>
+        </div>
+        <div className="col-xs-12 col-md-10 col-lg-8 col-lg-offset-2">
+          <div ref={div => {this._wrapper.visitors = div;}} />
+          <Visitors {...this.props} getWidth={this._getWidth}/>
         </div>
         <div className="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 js-comp-temp" />
         <div className="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 js-comp-rain" />

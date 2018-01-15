@@ -29,7 +29,6 @@ class RidgePlots extends Component {
 
   // resize the svg after reorder & park selection
   _resizeWrapperHeight(len) {
-    console.log(len, maxY);
     d3.select('#ridge-plots')
       .attr('height', dim.h + margin.top + margin.bottom + maxY + (len > 0 && detailH));
   }

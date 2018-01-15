@@ -107,7 +107,44 @@
 .ridge-plot-name.hover {
   fill: black !important;
 }
-/* overrise */
+
+/* comparision */
+.comparison {
+  .label:not(:last-child) {
+    margin-right: 20px;
+  }
+  .label-bg {
+    width: 60px;
+    height: 20px;
+    display: inline-block;
+  }
+  .label-0 {
+    background-color: $comp-0;
+  }
+  .label-1 {
+    background-color: $comp-1;
+  }
+  .label-2 {
+    background-color: $comp-2;
+  }
+  .label-3 {
+    background-color: $comp-3;
+  }
+  .circle-0 {
+    fill: $comp-0;
+  }
+  .circle-1 {
+    fill: $comp-1;
+  }
+  .circle-2 {
+    fill: $comp-2;
+  }
+  .circle-3 {
+    fill: $comp-3;
+  }
+}
+
+/* override */
 .Select-multi-value-wrapper {
     .Select-value {
       color: $ridge;

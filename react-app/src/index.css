@@ -95,6 +95,39 @@ body {
 .ridge-plot-name.hover {
   fill: black !important; }
 
-/* overrise */
+/* comparision */
+.comparison .label:not(:last-child) {
+  margin-right: 20px; }
+
+.comparison .label-bg {
+  width: 60px;
+  height: 20px;
+  display: inline-block; }
+
+.comparison .label-0 {
+  background-color: red; }
+
+.comparison .label-1 {
+  background-color: blue; }
+
+.comparison .label-2 {
+  background-color: green; }
+
+.comparison .label-3 {
+  background-color: yellow; }
+
+.comparison .circle-0 {
+  fill: red; }
+
+.comparison .circle-1 {
+  fill: blue; }
+
+.comparison .circle-2 {
+  fill: green; }
+
+.comparison .circle-3 {
+  fill: yellow; }
+
+/* override */
 .Select-multi-value-wrapper .Select-value {
   color: DarkGreen; }

@@ -64,7 +64,8 @@ class Park extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.selectedParkId !== nextProps.selectedParkId && nextProps.selectedParkId != null) {
+    if (this.props.data != null && nextProps.data != null && this.props.data.id !== nextProps.data.id) {
+    // if (this.props.selectedParkId !== nextProps.selectedParkId && nextProps.selectedParkId != null) {
       d3.selectAll('.js-park-elm').remove();
       this._addVisitors(nextProps.data.visitors);
       this._addTemperature(nextProps.data.temperature);

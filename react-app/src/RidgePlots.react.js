@@ -138,14 +138,14 @@ class RidgePlots extends Component {
         .attr('transform', `translate(${margin.left}, ${margin.top + plotHeight + (+i * plotDist)})`)
         .attr('class', `ridge-g js-ridge-g js-ridge-g-${park.id}`)
         .on('mouseover', () => {
-          this.props.selections.length === 0 && this._mouseOver(park.id);
+          this.props.parks.length === 0 && this._mouseOver(park.id);
         })
         .on('mouseout', () => {
-          this.props.selections.length === 0 && this._mouseOut(park.id);
+          this.props.parks.length === 0 && this._mouseOut(park.id);
         })
         .on('click', () => {
           // select park if this park isn't selected
-          if (this.props.selections.map(p => p.value).indexOf(park.id) === -1) {
+          if (this.props.parks.map(p => p.id).indexOf(park.id) === -1) {
             this.props.onSelectPark(park.id);
           } else {
             this.props.onUnselectPark(park.id);
@@ -219,19 +219,19 @@ class RidgePlots extends Component {
         .duration(1200)
         .attr('transform', `translate(${margin.left}, ${yPos})`);
       // keep distance if a park is selected
-      if (this.props.selections.length > 0) {
-        if (park.id === this.props.selections[this.props.selections.length - 1].value) {
+      if (this.props.parks.length > 0) {
+        if (park.id === this.props.parks[this.props.parks.length - 1].id) {
           hasSelectedPark = true;
           this.setState({selectedOrder: +j});
         }
       }
     }
     // bring the detail to the front
-    if (this.props.selections.length > 0) {
+    if (this.props.parks.length > 0) {
       parentNode.appendChild(d3.select('.js-ridge-detail').node());
     }
     //resize the svg
-    this._resizeWrapperHeight(this.props.selections.length);
+    this._resizeWrapperHeight(this.props.parks.length);
   }
 
   componentDidMount() {
@@ -242,23 +242,23 @@ class RidgePlots extends Component {
 
   componentWillReceiveProps(nextProps) {
     // when dataset is swtiched
-    if (this.props.selections.length !== nextProps.selections.length) {
+    if (this.props.parks.length !== nextProps.parks.length) {
       // check if new park is selected
-      if (nextProps.selections.length > this.props.selections.length) {
+      if (nextProps.parks.length > this.props.parks.length) {
         // highlight the park
-        const id = nextProps.selections[nextProps.selections.length - 1].value;
+        const id = nextProps.parks[nextProps.parks.length - 1].id;
         this._highlightPark(id);
-        this._getSelectedParkOrder(+d3.select(`.js-ridge-g-${id}`).attr('order'), nextProps.selections.length);
+        this._getSelectedParkOrder(+d3.select(`.js-ridge-g-${id}`).attr('order'), nextProps.parks.length);
         // dehighlight the previous parks
-        if (this.props.selections.length > 0) {
-          for (let sel of this.props.selections) {
-            this._defocus(sel.value);
+        if (this.props.parks.length > 0) {
+          for (let sel of this.props.parks) {
+            this._defocus(sel.id);
           }
         }
       // if park(s) deselected
       } else {
-        const current = this.props.selections.map(p => p.value);
-        const next = nextProps.selections.map(p => p.value);
+        const current = this.props.parks.map(p => p.id);
+        const next = nextProps.parks.map(p => p.id);
         const removedParks = _.difference(current, next);
         // still selected parks are remained
         if (next.length > 0 ) {
@@ -270,9 +270,9 @@ class RidgePlots extends Component {
           }
           const id = next[next.length -1];
           this._highlightPark(id, true);
-          this._getSelectedParkOrder(+d3.select(`.js-ridge-g-${id}`).attr('order'), nextProps.selections.length);
+          this._getSelectedParkOrder(+d3.select(`.js-ridge-g-${id}`).attr('order'), nextProps.parks.length);
         } else {
-          this._revertToNormal(nextProps.selections.length);
+          this._revertToNormal(nextProps.parks.length);
         }
       }
     }
@@ -280,14 +280,6 @@ class RidgePlots extends Component {
   }
 
   render() {
-    // selected park data
-    let data = null;
-    if (this.props.selections.length > 0) {
-      const id = this.props.selections[this.props.selections.length - 1].value;
-      const park = this.props.data.parks.filter(park => park.id === id)[0];
-      const temperature = this.props.data.weather[id].map(d => d.data.temperature).map(d => d.mean)
-      data = {visitors: park.by_month, id, temperature};
-    }
     return (
       <div className="row ridge-plots">
         <div className="col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
@@ -313,10 +305,9 @@ class RidgePlots extends Component {
         </div>
         <div className="col-xs-12">
           <svg id="ridge-plots" className="ridge-plots-wrapper">
-          {this.props.selections.length > 0 &&
+          {this.props.parks.length > 0 &&
             <Park
               selectedOrder={this.state.selectedOrder}
-              selectedParkId={data ? data.id : null}
               margin={margin}
               maxY={maxY}
               plotDist={plotDist}
@@ -324,7 +315,7 @@ class RidgePlots extends Component {
               dist={dist}
               x={x}
               y={y}
-              data={data}
+              data={this.props.parks[this.props.parks.length - 1]}
             />}
           </svg>
         </div>

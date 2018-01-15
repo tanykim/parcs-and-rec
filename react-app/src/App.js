@@ -3,6 +3,7 @@ import Select from 'react-select';
 
 import Map from './Map.react';
 import RidgePlots from './RidgePlots.react';
+import Comparison from './Comparison.react';
 
 const data = require('./data/data.json');
 const MULTI_MAX = 4;
@@ -10,7 +11,7 @@ const MULTI_MAX = 4;
 class App extends Component {
   _wrapper = {
     map: null,
-    ridgePlots: null
+    ridgePlots: null,
   };
   state = {selections: [], isMultiMax: false};
 
@@ -39,6 +40,16 @@ class App extends Component {
   }
 
   render() {
+    // data of selected parks
+    const ids = this.state.selections.map(park => park.value);
+    let parks = [];
+    for (let id of ids) {
+      const parkData = data.parks.filter(park => park.id === id)[0];
+      const temperature = data.weather[id].map(d => d.data.temperature).map(d => d.mean);
+      const {name, by_month, total, size} = parkData;
+      parks.push({visitors: by_month, id, name, total, size, temperature});
+    }
+
     return (
       <div>
         <div className="row">
@@ -66,8 +77,8 @@ class App extends Component {
                 return {value: park.id, label: park.name};
               })}
             />
-            { this.state.selections.length > 1 && <div>Compare all</div> }
-            { this.state.isMultiMax && <div>Copmare only up to 4</div>}
+            {this.state.selections.length > 1 && <div>See Comparison</div>}
+            {this.state.isMultiMax && <div>Copmare only up to 4</div>}
           </div>
         </div>
         <div className="row">
@@ -75,12 +86,19 @@ class App extends Component {
             <div ref={div => {this._wrapper.ridgePlots = div;}} />
             <RidgePlots
               data={data}
-              selections={this.state.selections}
+              parks={parks}
               onSelectPark={this._selectPark}
               onUnselectPark={this._unselectPark}
               getWidth={this._getWidth} />
           </div>
         </div>
+        {this.state.selections.length > 1 &&
+          <Comparison
+            parks={parks}
+            maxTotalVisitor={data.max_total_visitor}
+            maxSize={data.max_size}
+           />
+        }
         <div className="row">
           <div className="col-xs-12">
             FOOTER

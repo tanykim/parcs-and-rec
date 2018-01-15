@@ -110,6 +110,9 @@
 
 /* comparision */
 .comparison {
+  .names {
+    text-align: center;
+  }
   .label:not(:last-child) {
     margin-right: 20px;
   }
@@ -130,17 +133,33 @@
   .label-3 {
     background-color: $comp-3;
   }
-  .circle-0 {
+  .fill-0 {
     fill: $comp-0;
   }
-  .circle-1 {
+  .fill-1 {
     fill: $comp-1;
   }
-  .circle-2 {
+  .fill-2 {
     fill: $comp-2;
   }
-  .circle-3 {
+  .fill-3 {
     fill: $comp-3;
+  }
+  .temp-line {
+    fill: none;
+    stroke-width: 2px;
+  }
+  .line-0 {
+    stroke: $comp-0;
+  }
+  .line-1 {
+    stroke: $comp-1;
+  }
+  .line-2 {
+    stroke: $comp-2;
+  }
+  .line-3 {
+    stroke: $comp-3;
   }
 }
 

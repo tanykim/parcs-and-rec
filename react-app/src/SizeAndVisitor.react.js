@@ -22,7 +22,7 @@ class SizeAndVisitor extends Component {
       .attr('cx', park => x(park.size))
       .attr('cy', park => y(park.total))
       .attr('r', 10)
-      .attr('class', (park, i) => `circle-${i} js-comp-scatter-${park.id}`);
+      .attr('class', (park, i) => `fill-${i} js-comp-scatter-${park.id}`);
   }
 
   _drawScatterPlot() {

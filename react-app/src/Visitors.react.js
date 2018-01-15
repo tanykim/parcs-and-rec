@@ -34,7 +34,7 @@ class Visitors extends Component {
           .attr('y', yVal)
           .attr('width', barW)
           .attr('height', dim.h - yVal)
-          .attr('class', `circle-${order} js-comp-visitors-elm`);
+          .attr('class', `fill-${order} js-comp-visitors-elm`);
       }
     }
   }
@@ -60,6 +60,8 @@ class Visitors extends Component {
   componentWillReceiveProps(nextProps) {
     // park selection is updated
     if (this.props.parks.length !== nextProps.parks.length) {
+      const maxVisitors = _.max(nextProps.parks.map(park => _.max(park.visitors)));
+      y.domain([0, maxVisitors]);
       this._drawParks(nextProps.parks);
     }
   }

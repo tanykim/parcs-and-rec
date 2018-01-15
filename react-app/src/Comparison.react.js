@@ -6,11 +6,13 @@ import React, { Component } from 'react';
 
 import SizeAndVisitor from './SizeAndVisitor.react';
 import Visitors from './Visitors.react';
+import Temperature from './Temperature.react';
 
 class Comparison extends Component {
   _wrapper = {
     sizeAndVisitor: null,
     visitors: null,
+    temperature: null,
   };
 
   _getWidth = (type) => {
@@ -24,20 +26,22 @@ class Comparison extends Component {
       </span>)
     );
     return (
-      <div className="row center-xs comparison">
-        <div className="col-xs-12">
+      <div className="row comparison">
+        <div className="col-xs-12 names">
           {names}
         </div>
-        <div className="col-xs-12 col-md-6 col-lg-4">
+        <div className="col-xs-12 col-md-6 col-lg-4 col-md-offset-3 col-md-offset-4">
           <div ref={div => {this._wrapper.sizeAndVisitor = div;}} />
           <SizeAndVisitor {...this.props} getWidth={this._getWidth}/>
         </div>
-        <div className="col-xs-12 col-md-10 col-lg-8 col-lg-offset-2">
+        <div className="col-xs-12 col-md-10 col-lg-8 col-md-offset-1 col-md-offset-2">
           <div ref={div => {this._wrapper.visitors = div;}} />
-          <Visitors {...this.props} getWidth={this._getWidth}/>
+          <Visitors parks={this.props.parks} getWidth={this._getWidth}/>
         </div>
-        <div className="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 js-comp-temp" />
-        <div className="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 js-comp-rain" />
+        <div className="col-xs-12 col-md-10 col-lg-8 col-md-offset-1 col-md-offset-2">
+          <div ref={div => {this._wrapper.temperature = div;}} />
+          <Temperature parks={this.props.parks} getWidth={this._getWidth}/>
+        </div>
       </div>
     )
   }

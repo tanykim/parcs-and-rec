@@ -46,8 +46,9 @@ class App extends Component {
     for (let id of ids) {
       const parkData = data.parks.filter(park => park.id === id)[0];
       const temperature = data.weather[id].map(d => d.data.temperature).map(d => d.mean);
+      const events = data.weather[id].map(d => d.data.events);
       const {name, by_month, total, size} = parkData;
-      parks.push({visitors: by_month, id, name, total, size, temperature});
+      parks.push({visitors: by_month, id, name, total, size, temperature, events});
     }
 
     return (

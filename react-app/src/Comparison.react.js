@@ -7,12 +7,14 @@ import React, { Component } from 'react';
 import SizeAndVisitor from './SizeAndVisitor.react';
 import Visitors from './Visitors.react';
 import Temperature from './Temperature.react';
+import Events from './Events.react';
 
 class Comparison extends Component {
   _wrapper = {
     sizeAndVisitor: null,
     visitors: null,
     temperature: null,
+    events: null,
   };
 
   _getWidth = (type) => {
@@ -41,6 +43,10 @@ class Comparison extends Component {
         <div className="col-xs-12 col-md-10 col-lg-8 col-md-offset-1 col-md-offset-2">
           <div ref={div => {this._wrapper.temperature = div;}} />
           <Temperature parks={this.props.parks} getWidth={this._getWidth}/>
+        </div>
+        <div className="col-xs-12 col-md-10 col-lg-8 col-md-offset-1 col-md-offset-2">
+          <div ref={div => {this._wrapper.events = div;}} />
+          <Events parks={this.props.parks} getWidth={this._getWidth}/>
         </div>
       </div>
     )

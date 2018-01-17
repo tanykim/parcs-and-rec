@@ -67,12 +67,14 @@ with open('csv/national_parks_visitors.json', 'r', encoding='utf8') as f:
         id=x['id'],
         name=x['name'],
         state=x['state_abbr'],
-        by_month=x['by_month'],
+        visitors=x['by_month'],
         lon=x['lon'],
         lat=x['lat'],
         total=int(x['total'].replace(',', '')),
         # seasonal=statistics.stdev(x['by_month']) / statistics.mean(x['by_month']),
-        size=size[x['id']]
+        size=size[x['id']],
+        temperature=list(map(lambda y: y['temperature'], weather[x['id']])),
+        events=list(map(lambda y: y['events'], weather[x['id']]))
     ), data))
 
     # set graph x and y range
@@ -97,8 +99,7 @@ json_data = json.dumps(dict(
     min_size=min(size.values()),
     max_size=max(size.values()),
     # seasonal_domain=seasonal_domain,
-    x_domain=x_domain,
-    weather=weather),
+    x_domain=x_domain),
     ensure_ascii=False)
 file.write(json_data)
 file.close()

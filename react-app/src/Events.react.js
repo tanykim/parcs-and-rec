@@ -4,6 +4,7 @@
 
 import * as d3 from 'd3';
 import _ from 'lodash';
+import moment from 'moment';
 import React, { Component } from 'react';
 import Select from 'react-select';
 
@@ -43,7 +44,7 @@ class Events extends Component {
       .attr('class', 'js-comp-events');
     g.append('g')
       .attr('class', 'axis x')
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x).tickFormat(i => moment(i + 1, 'M').format('MMM')))
       .attr('transform', `translate(0, ${dim.h})`);
     g.append('g')
       .attr('class', 'axis y')

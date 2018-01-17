@@ -18,8 +18,8 @@ const plotHeight = 240;
 let maxY;
 // needed for details of selected park
 const chartH = 200;
-const dist = {bar: plotDist * 2 + 40, temp: 40};
-const detailH = chartH * 2 + dist.bar + dist.temp;
+const dist = {bar: plotDist * 2 + 40, temp: 40, events: 40};
+const detailH = chartH * 3 + dist.bar + dist.temp + dist.events;
 const line = d3.line();
 const x = d3.scaleLinear();
 const y = d3.scaleLinear().range([0, plotHeight]);
@@ -116,7 +116,7 @@ class RidgePlots extends Component {
 
     // add two points on each side of X axis
     x.range([0, dim.w]).domain([0, 15]);
-    const maxMonthly = _.max(data.parks.map(d => _.max(d.by_month)));
+    const maxMonthly = _.max(data.parks.map(d => _.max(d.visitors)));
     // since the y base is 0, do not swap range
     y.domain([0, maxMonthly]);
     line.x((d, i) => x(i)).y(d => -y(d));
@@ -151,18 +151,18 @@ class RidgePlots extends Component {
           }
         });
       const c = color(park.size);
-      let lineData = _.concat([0, 0], park.by_month, [0, 0]);
+      let lineData = _.concat([0, 0], park.visitors, [0, 0]);
       let fillLine =  line(lineData).replace('M0,0', `M0,${plotDist}v${-plotDist}`) + `v${plotDist}`;
       // filling gap between two plots
       g.append('path')
         .attr('d', fillLine)
         .attr('fill', c)
-        .attr('max', y(_.max(park.by_month)))
+        .attr('max', y(_.max(park.visitors)))
         .attr('class', `ridge-plot-fill js-ridge-fill js-ridge-fill-${park.id}`);
       g.append('path')
         .datum(lineData)
         .attr('d', line)
-        .attr('max', y(_.max(park.by_month)))
+        .attr('max', y(_.max(park.visitors)))
         .attr('class', `ridge-plot-outline js-ridge-outlines js-ridge-outline-${park.id}`);
       // national park name
       g.append('text')

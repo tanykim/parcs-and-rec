@@ -11,6 +11,7 @@ def get_prec_vals(tr):
 
 def get_weather_data(month, park):
     url = 'https://www.wunderground.com/history/airport/' + park['id'] + '/2017/' + str(month) + '/01/MonthlyHistory.html?reqdb.zip=' + park['zip']
+    print (url)
     response = urllib.request.urlopen(url)
     bs = BeautifulSoup(response.read(), 'html.parser')
     table = bs.find('table', id='historyTable').find('tbody')
@@ -35,7 +36,16 @@ def get_weather_data(month, park):
         precipitation=get_prec_vals(prec),
         snow_depth= get_prec_vals(snow)
     )
-    return dict(temperature=temperature_vals, precipitation=precipitation_vals)
+    events_vals = dict(rain=0, fog=0, thunderstorm=0, snow=0)
+    events_tbody = bs.find('div', id='observations_details').find_all('tbody')
+    for event in events_tbody:
+        cols = event.find('tr').find_all('td')
+        desc = cols[len(cols) - 1].get_text()
+        for key in events_vals.keys():
+            if key.capitalize() in desc:
+                events_vals[key] = events_vals[key] + 1
+    print (events_vals)
+    return dict(temperature=temperature_vals, precipitation=precipitation_vals, events=events_vals)
 
 def save_as_json(data):
     file = open('csv/national_parks_weather.json', 'w', encoding='utf8')
@@ -51,6 +61,6 @@ with open('csv/national_parks_station.json', 'r', encoding='utf8') as f:
         by_month = []
         for month in range(1, 13):
             print (park, month)
-            by_month.append(dict(month=month, data=get_weather_data(month, park)))
+            by_month.append(get_weather_data(month, park))
         by_park[key] = by_month
     save_as_json(by_park)

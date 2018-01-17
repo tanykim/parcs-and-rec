@@ -97,13 +97,11 @@ class Park extends Component {
 
     return (
       <g
-        className="js-ridge-detail"
+        className="js-ridge-detail ridge-month"
         transform={`translate(${margin.left}, ${margin.top + maxY + plotDist * selectedOrder})`}>
-        <g className="ridge-month js-ridge-month">
-          {months}
-          <g className="js-park-visitors"/>
-          <g className="js-park-temperature"/>
-        </g>
+        {months}
+        <g className="js-park-visitors"/>
+        <g className="js-park-temperature"/>
       </g>
     );
   }

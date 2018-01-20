@@ -13,15 +13,17 @@ import Park from './Park.react';
 const plotDist = 20;
 const margin = {top: 60, right: 0, bottom: 40, left: 300, month: 20};
 const dim = {w: null, h: null};
+// needed for setting the Park component height, i.e., selected park
+const dist = {bar: plotDist * 2 + 40, temp: 40, events: 40};
+const chartH = {bar: 200, temp: 200, events: 160};
+const distSum = _.values(dist).reduce((sum, val) => sum + val, 0);
+const chartHSum = _.values(chartH).reduce((sum, val) => sum + val, 0);
+const detailH = distSum + chartHSum + plotDist * 2;
+const line = d3.line();
+const x = d3.scaleLinear();
 // height of the selected park
 const plotHeight = 240;
 let maxY;
-// needed for details of selected park
-const chartH = 200;
-const dist = {bar: plotDist * 2 + 40, temp: 40, events: 40};
-const detailH = chartH * 3 + dist.bar + dist.temp + dist.events;
-const line = d3.line();
-const x = d3.scaleLinear();
 const y = d3.scaleLinear().range([0, plotHeight]);
 
 class RidgePlots extends Component {
@@ -233,12 +235,6 @@ class RidgePlots extends Component {
     this._resizeWrapperHeight(this.props.parks.length);
   }
 
-  componentDidMount() {
-    dim.w = this.props.getWidth('ridgePlots') - margin.left - margin.right;
-    dim.h = this.props.data.parks.length * plotDist;
-    this._drawParks();
-  }
-
   componentWillReceiveProps(nextProps) {
     // when dataset is swtiched
     if (this.props.parks.length !== nextProps.parks.length) {
@@ -278,9 +274,15 @@ class RidgePlots extends Component {
 
   }
 
+  componentDidMount() {
+    dim.w = this.props.getWidth('ridgePlots') - margin.left - margin.right;
+    dim.h = this.props.data.parks.length * plotDist;
+    this._drawParks();
+  }
+
   render() {
     return (
-      <div className="row ridge-plots">
+      <div className="row ridge-plots-wrapper">
         <div className="col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
           <Select
             clearable={false}
@@ -302,21 +304,22 @@ class RidgePlots extends Component {
             ]}
           />
         </div>
-        <div className="col-xs-12">
-          <svg id="ridge-plots" className="ridge-plots-wrapper">
+        <div className="col-xs-12 ridge-plots" >
+          <svg id="ridge-plots"/>
           {this.props.parks.length > 0 &&
             <Park
               selectedOrder={this.state.selectedOrder}
               margin={margin}
               maxY={maxY}
               plotDist={plotDist}
+              chartW={dim.w}
               chartH={chartH}
+              detailH={detailH}
               dist={dist}
               x={x}
               y={y}
               data={this.props.parks[this.props.parks.length - 1]}
             />}
-          </svg>
         </div>
       </div>
     );

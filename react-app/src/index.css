@@ -100,6 +100,13 @@ body {
 .ridge-plot-name.hover {
   fill: black !important; }
 
+/* coxcomb */
+.coxcomb-label {
+  alignment-baseline: central; }
+
+.fill-normal {
+  fill: black; }
+
 /* comparision */
 .comparison .names {
   text-align: center; }

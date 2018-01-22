@@ -63,13 +63,6 @@ class Park extends Component {
     }
   }
 
-  _addEvents = (data) => {
-    const g = d3.select('.js-park-events');
-    for (let event in data) {
-
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     if (this.props.data != null && nextProps.data != null && this.props.data.id !== nextProps.data.id) {
       d3.selectAll('.js-park-elm').remove();
@@ -81,7 +74,6 @@ class Park extends Component {
   componentDidMount() {
     this._addVisitors(this.props.data.visitors);
     this._addTemperature(this.props.data.temperature);
-    this._addEvents(this.props.data.events);
   }
 
   render() {
@@ -110,13 +102,17 @@ class Park extends Component {
           {_.keys(this.props.data.events[0]).map((event, i) => {
             let width = chartW / 4;
             let left = width * i;
-            return (<Event
-              key={i}
-              data={this.props.data.events.map(month => month[event])}
-              type={event}
-              left={left}
-              width={width}
-              height={chartH.events}/>)
+            return (<g key={i}>
+              <text x={left} y="0">{event}</text>
+              <Event
+                vis="park"
+                data={this.props.data.events.map(month => month[event])}
+                type={event}
+                left={left}
+                width={width}
+                fill="general"
+                height={chartH.events}/>
+            </g>);
           })}
         </g>
       </svg>

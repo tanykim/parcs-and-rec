@@ -115,6 +115,14 @@
   fill: black !important;
 }
 
+/* coxcomb */
+.coxcomb-label {
+  // text-anchor: middle;
+  alignment-baseline: central;
+}
+.fill-normal {
+  fill: black;
+}
 /* comparision */
 .comparison {
   .names {

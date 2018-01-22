@@ -8,6 +8,7 @@ import SizeAndVisitor from './SizeAndVisitor.react';
 import Visitors from './Visitors.react';
 import Temperature from './Temperature.react';
 import Events from './Events.react';
+import WeatherEvents from './WeatherEvents.react';
 
 class Comparison extends Component {
   _wrapper = {
@@ -15,6 +16,7 @@ class Comparison extends Component {
     visitors: null,
     temperature: null,
     events: null,
+    weatherEvents: null,
   };
 
   _getWidth = (type) => {
@@ -22,11 +24,14 @@ class Comparison extends Component {
   }
 
   render() {
-    const names = this.props.parks.map((park, i) =>
-      (<span key={i} className="label">
+    const names = this.props.parks.map((park, i) => {
+      return(<span key={i} className="label">
         <span className={`label-bg label-${i}`}/>{park.name}
-      </span>)
-    );
+      </span>);
+    });
+    const events = this.props.parks.map((park, i) => {
+      return(<WeatherEvents key={park.id} park={park} order={i} getWidth={this._getWidth}/>);
+    });
     return (
       <div className="row comparison">
         <div className="col-xs-12 names">
@@ -47,6 +52,10 @@ class Comparison extends Component {
         <div className="col-xs-12 col-md-10 col-lg-8 col-md-offset-1 col-md-offset-2">
           <div ref={div => {this._wrapper.events = div;}} />
           <Events parks={this.props.parks} getWidth={this._getWidth}/>
+        </div>
+        <div className="col-xs-12 col-md-10 col-lg-8 col-md-offset-1 col-md-offset-2">
+          <div ref={div => {this._wrapper.weatherEvents = div;}} />
+          {events}
         </div>
       </div>
     )

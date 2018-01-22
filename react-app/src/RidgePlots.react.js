@@ -15,7 +15,7 @@ const margin = {top: 60, right: 0, bottom: 40, left: 300, month: 20};
 const dim = {w: null, h: null};
 // needed for setting the Park component height, i.e., selected park
 const dist = {bar: plotDist * 2 + 40, temp: 40, events: 40};
-const chartH = {bar: 200, temp: 200, events: 160};
+const chartH = {bar: 200, temp: 200, events: 200};
 const distSum = _.values(dist).reduce((sum, val) => sum + val, 0);
 const chartHSum = _.values(chartH).reduce((sum, val) => sum + val, 0);
 const detailH = distSum + chartHSum + plotDist * 2;

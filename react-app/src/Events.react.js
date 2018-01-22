@@ -66,7 +66,7 @@ class Events extends Component {
   componentWillReceiveProps(nextProps) {
     // park selection is updated
     if (this.props.parks.length !== nextProps.parks.length) {
-      this._drawParks(nextProps.parks);
+      this._drawParks(nextProps.parks, this.state.event);
     }
   }
 

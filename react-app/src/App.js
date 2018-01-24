@@ -26,6 +26,10 @@ class App extends Component {
       return;
     }
     this.setState({selections: option});
+    // console.log(this.state.selections.length);
+    // const parksInSelect = document.getElementById('park-select')
+    //   .getElementsByClassName('Select-value');
+    // console.log(parksInSelect[parksInSelect.length - 1]);
   }
 
   _selectPark = (id) => {
@@ -54,7 +58,7 @@ class App extends Component {
 
     return (
       <div>
-        <div className="row">
+        <div className="row row-no-margin">
           <div className="col-xs-12 col-md-7 col-lg-8 first-md app-map">
             <div ref={div => {this._wrapper.map = div;}} />
             <Map
@@ -64,22 +68,36 @@ class App extends Component {
               onUnselectPark={this._unselectPark}
               getWidth={this._getWidth} />
           </div>
-          <div className="col-xs-12 col-md-5 col-lg-4 first-xs app-title">
-            <div>
-              <h1> National Parks & Reactional Visitors </h1>
+          <div className="col-xs-12 col-md-5 col-lg-4 first-xs title-wrapper">
+            <div className="diagonal" />
+            <div className="title">
+              <div className="national">National</div>
+              <div className="parks">
+                <div>Parks<span className="and">and</span></div>
+                <div>Recreation<span className="al">al Visitors</span></div>
+              </div>
             </div>
-            <Select
-              name="form-field-name"
-              clearable={true}
-              multi={true}
-              value={this.state.selections}
-              placeholder="Select a national park"
-              onChange={this._onParkSelected}
-              options={data.parks.map(park => {
-                return {value: park.id, label: park.name};
-              })}
-            />
-            {this.state.selections.length > 1 && <div>See Comparison</div>}
+            <div className="headline">
+              When is the best time to visit <br/>the {data.parks.length} National Parks in the United States?
+            </div>
+            <div className="park-select" id="park-select">
+              <Select
+                name="form-field-name"
+                clearable={true}
+                multi={true}
+                value={this.state.selections}
+                placeholder="Select a national park"
+                onChange={this._onParkSelected}
+                options={data.parks.map(park => {
+                  return {value: park.id, label: park.name};
+                })}
+              />
+            </div>
+            {this.state.selections.length > 1 &&
+              <div className="comparison">
+                <div className="button">See Comparison</div>
+              </div>
+            }
             {this.state.isMultiMax && <div>Copmare only up to 4</div>}
           </div>
         </div>

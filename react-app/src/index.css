@@ -1,10 +1,115 @@
+@import url("https://fonts.googleapis.com/css?family=Libre+Baskerville|Oswald:400,700");
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif; }
 
-.app-title {
-  background-color: PaleGoldenrod; }
+.row-no-margin {
+  margin-right: 0;
+  margin-left: 0;
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2); }
+
+.title-wrapper {
+  background-color: #0a3717;
+  padding-left: 0;
+  padding-right: 0;
+  position: relative;
+  text-align: center; }
+  .title-wrapper .diagonal {
+    background-color: transparent;
+    background-image: -webkit-linear-gradient(8deg, transparent 49.5%, #0a3717 50%);
+    min-height: 500px;
+    min-height: 100%;
+    position: absolute;
+    left: -100px;
+    width: 100px;
+    top: 0; }
+  .title-wrapper .title {
+    color: white;
+    font-family: "Oswald", "Hevetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 2em;
+    letter-spacing: 0.02em;
+    line-height: 110%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+    margin-bottom: 0.6em; }
+    .title-wrapper .title .national {
+      color: rgba(255, 255, 255, 0.5);
+      margin-right: 0.2em;
+      letter-spacing: 0em; }
+    .title-wrapper .title .parks {
+      text-align: left; }
+    .title-wrapper .title .and {
+      font-weight: 300;
+      margin-left: 0.2em; }
+    .title-wrapper .title .al {
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: normal;
+      letter-spacing: 0em; }
+  .title-wrapper .headline {
+    color: #f1eab9;
+    font-family: "Libre Baskerville", Georgia, "Times New Roman", serif;
+    margin-bottom: 1.2em; }
+  .title-wrapper .park-select {
+    margin-right: 2em;
+    margin-left: 2em;
+    text-align: left;
+    font-family: "Libre Baskerville", Georgia, "Times New Roman", serif; }
+  .title-wrapper .comparison {
+    text-align: center; }
+    .title-wrapper .comparison .button {
+      font-size: 1.2em;
+      letter-spacing: 0.1em;
+      display: inline-block;
+      background-color: #f1eab9;
+      font-family: "Oswald", "Hevetica Neue", Helvetica, Arial, sans-serif;
+      margin-top: 1em;
+      padding: 0.4em 1em;
+      border-radius: 4px;
+      cursor: pointer; }
+      .title-wrapper .comparison .button:hover {
+        color: #047023; }
+
+/* override */
+.Select.is-focused:not(.is-open) > .Select-control {
+  border-color: #f1eab9;
+  box-shadow: none; }
+
+.Select-control {
+  color: #1d1900; }
+  .Select-control .Select-value {
+    border-color: DarkGreen;
+    color: DarkGreen;
+    background-color: #f1eab9; }
+    .Select-control .Select-value .Select-value-icon {
+      border-right-color: DarkGreen; }
+      .Select-control .Select-value .Select-value-icon:hover {
+        color: DarkGreen;
+        background-color: rgba(0, 0, 0, 0.1); }
+    .Select-control .Select-value:nth-last-child(2) {
+      color: red; }
+  .Select-control .Select-placeholder {
+    color: #047023; }
+
+.Select-option {
+  color: #63625c; }
+
+.Select-option.is-focused {
+  background-color: rgba(241, 234, 185, 0.5);
+  color: black; }
+
+.Select--multi .Select-control {
+  padding-bottom: 2px; }
+
+.Select--multi .Select-value {
+  font-size: 1em; }
+
+.Select--multi .Select-input {
+  height: ''; }
 
 .app-map {
   background-color: Azure;
@@ -38,7 +143,7 @@ body {
   fill: DarkGreen; }
 
 .ridge-parks.defocused {
-  fill: SaddleBrown; }
+  fill: brown; }
 
 .ridge-blank {
   stroke: #efefef; }
@@ -65,7 +170,7 @@ body {
 
 .ridge-plot-outline {
   fill: none;
-  stroke: SaddleBrown;
+  stroke: brown;
   stroke-width: 1;
   stroke-linejoin: round;
   stroke-linecap: round; }
@@ -158,7 +263,3 @@ body {
 
 .comparison .line-3 {
   stroke: yellow; }
-
-/* override */
-.Select-multi-value-wrapper .Select-value {
-  color: DarkGreen; }

@@ -11,7 +11,8 @@
     "react-dom": "^16.2.0",
     "react-scripts": "1.0.17",
     "react-select": "^1.1.0",
-    "topojson": "^3.0.2"
+    "topojson": "^3.0.2",
+    "undux": "^3.0.6"
   },
   "scripts": {
     "build-css": "node-sass src/scss/index.scss src/index.css",

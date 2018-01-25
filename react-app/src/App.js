@@ -1,51 +1,47 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
 
+import { withStore } from './store';
+
 import Map from './Map.react';
+import ParkSelect from './ParkSelect.react';
 import RidgePlots from './RidgePlots.react';
 import Comparison from './Comparison.react';
 
 const data = require('./data/data.json');
 const MULTI_MAX = 4;
 
-class App extends Component {
+let App = withStore('selections')(class extends Component {
   _wrapper = {
     map: null,
     ridgePlots: null,
   };
-  state = {selections: [], isMultiMax: false};
 
   _getWidth = (type) => {
     return this._wrapper[type]=== null ? 800 : this._wrapper[type].offsetWidth;
   }
 
-  _onParkSelected = (option) => {
-    this.setState({isMultiMax: option.length === MULTI_MAX + 1});
-    // if selection already reached the max, do not add more
-    if (option.length === MULTI_MAX + 1) {
-      return;
-    }
-    this.setState({selections: option});
-    // console.log(this.state.selections.length);
-    // const parksInSelect = document.getElementById('park-select')
-    //   .getElementsByClassName('Select-value');
-    // console.log(parksInSelect[parksInSelect.length - 1]);
+  _selSelections = (selections) => {
+    if (selections.length === MULTI_MAX + 1) return;
+    this.props.store.set('selections')(selections);
   }
 
   _selectPark = (id) => {
     const park = data.parks.filter(park => park.id === id)[0];
-    const option = [{value: park.id, label: park.name}];
-    this._onParkSelected(this.state.selections.concat(option));
+    const selection = [{value: park.id, label: park.name}];
+    const selections = this.props.store.get('selections').concat(selection);
+    this._selSelections(selections);
   }
 
   _unselectPark = (id) => {
-    const newOption = this.state.selections.filter(sel => sel.value !== id);
-    this.setState({selections: newOption, isMultiMax: false});
+    const newOption = this.props.store.get('selections').filter(sel => sel.value !== id);
+    this.props.store.set('selections')(newOption);
+    this.props.store.set('isMultiMax')(false);
   }
 
   render() {
     // data of selected parks
-    const ids = this.state.selections.map(park => park.value);
+    const ids = this.props.store.get('selections').map(park => park.value);
     let parks = [];
     for (let id of ids) {
       const parkData = data.parks.filter(park => park.id === id)[0];
@@ -63,7 +59,7 @@ class App extends Component {
             <div ref={div => {this._wrapper.map = div;}} />
             <Map
               data={data}
-              selections={this.state.selections}
+              selections={this.props.store.get('selections')}
               onSelectPark={this._selectPark}
               onUnselectPark={this._unselectPark}
               getWidth={this._getWidth} />
@@ -81,24 +77,17 @@ class App extends Component {
               When is the best time to visit <br/>the {data.parks.length} National Parks in the United States?
             </div>
             <div className="park-select" id="park-select">
-              <Select
-                name="form-field-name"
-                clearable={true}
-                multi={true}
-                value={this.state.selections}
-                placeholder="Select a national park"
-                onChange={this._onParkSelected}
-                options={data.parks.map(park => {
-                  return {value: park.id, label: park.name};
-                })}
-              />
+              <ParkSelect
+                parks={data.parks}
+                selections={this.props.store.get('selections')}
+                onSetSelections={this._selSelections}/>
             </div>
-            {this.state.selections.length > 1 &&
+            {this.props.store.get('selections').length > 1 &&
               <div className="comparison">
                 <div className="button">See Comparison</div>
               </div>
             }
-            {this.state.isMultiMax && <div>Copmare only up to 4</div>}
+            {this.props.store.get('selections') && <div>Copmare only up to 4</div>}
           </div>
         </div>
         <div className="row">
@@ -112,7 +101,7 @@ class App extends Component {
               getWidth={this._getWidth} />
           </div>
         </div>
-        {this.state.selections.length > 1 &&
+        {this.props.store.get('selections').length > 1 &&
           <Comparison
             parks={parks}
             maxTotalVisitor={data.max_total_visitor}
@@ -127,6 +116,6 @@ class App extends Component {
       </div>
     );
   }
-}
+});
 
 export default App;

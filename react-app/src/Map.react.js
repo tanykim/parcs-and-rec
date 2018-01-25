@@ -181,22 +181,24 @@ class Map extends Component {
 
   componentWillReceiveProps(nextProps) {
     // when dataset is swtiched
-    if (this.props.selections.length !== nextProps.selections.length) {
+    const currentSel = this.props.selections;
+    const nextSel = nextProps.selections;
+    if (currentSel.length !== nextSel.length) {
       // check if new park is selected
-      if (nextProps.selections.length > this.props.selections.length) {
+      if (nextSel.length > currentSel.length) {
         // zoom in to the new park
-        this._zoom(nextProps.selections[nextProps.selections.length - 1].value);
+        this._zoom(nextSel[nextSel.length - 1].value);
 
         // dehighlight the previous parks
-        if (this.props.selections.length > 0) {
-          for (let sel of this.props.selections) {
+        if (currentSel.length > 0) {
+          for (let sel of currentSel) {
             this._defocus(sel.value);
           }
         }
       // if park(s) deselected
       } else {
-        const current = this.props.selections.map(p => p.value);
-        const next = nextProps.selections.map(p => p.value);
+        const current = currentSel.map(p => p.value);
+        const next = nextSel.map(p => p.value);
         const removedParks = _.difference(current, next);
         for (let park of removedParks) {
           this._reset(park);

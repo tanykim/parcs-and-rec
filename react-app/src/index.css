@@ -4,6 +4,54 @@ body {
   padding: 0;
   font-family: sans-serif; }
 
+/* override react-select styles*/
+.Select {
+  font-family: "Libre Baskerville", Georgia, "Times New Roman", serif; }
+
+.Select-control {
+  color: #1d1900; }
+  .Select-control .Select-placeholder {
+    color: #047023; }
+
+.Select-option {
+  color: #63625c; }
+
+.Select-option.is-focused {
+  background-color: rgba(241, 234, 185, 0.5);
+  color: black; }
+
+/* only for single selection */
+.Select--single.is-focused:not(.is-open) > .Select-control {
+  border-color: #047023;
+  box-shadow: none; }
+
+.Select-menu-outer .Select-option.is-selected {
+  background-color: rgba(241, 234, 185, 0.8); }
+
+/* only for Multi selection */
+.Select--multi.is-focused:not(.is-open) > .Select-control {
+  border-color: #f1eab9;
+  box-shadow: none; }
+
+.Select.Select--multi .Select-control {
+  padding-bottom: 2px; }
+
+.Select.Select--multi .Select-value {
+  font-size: 1em;
+  border-color: DarkGreen;
+  color: DarkGreen;
+  background-color: #f1eab9; }
+  .Select.Select--multi .Select-value .Select-value-icon {
+    border-right-color: DarkGreen; }
+    .Select.Select--multi .Select-value .Select-value-icon:hover {
+      color: DarkGreen;
+      background-color: rgba(0, 0, 0, 0.1); }
+  .Select.Select--multi .Select-value:nth-last-child(2) {
+    color: red; }
+
+.Select.Select--multi .Select-input {
+  height: ''; }
+
 .row-no-margin {
   margin-right: 0;
   margin-left: 0;
@@ -57,8 +105,7 @@ body {
   .title-wrapper .park-select {
     margin-right: 2em;
     margin-left: 2em;
-    text-align: left;
-    font-family: "Libre Baskerville", Georgia, "Times New Roman", serif; }
+    text-align: left; }
   .title-wrapper .comparison {
     text-align: center; }
     .title-wrapper .comparison .button {
@@ -73,43 +120,6 @@ body {
       cursor: pointer; }
       .title-wrapper .comparison .button:hover {
         color: #047023; }
-
-/* override */
-.Select.is-focused:not(.is-open) > .Select-control {
-  border-color: #f1eab9;
-  box-shadow: none; }
-
-.Select-control {
-  color: #1d1900; }
-  .Select-control .Select-value {
-    border-color: DarkGreen;
-    color: DarkGreen;
-    background-color: #f1eab9; }
-    .Select-control .Select-value .Select-value-icon {
-      border-right-color: DarkGreen; }
-      .Select-control .Select-value .Select-value-icon:hover {
-        color: DarkGreen;
-        background-color: rgba(0, 0, 0, 0.1); }
-    .Select-control .Select-value:nth-last-child(2) {
-      color: red; }
-  .Select-control .Select-placeholder {
-    color: #047023; }
-
-.Select-option {
-  color: #63625c; }
-
-.Select-option.is-focused {
-  background-color: rgba(241, 234, 185, 0.5);
-  color: black; }
-
-.Select--multi .Select-control {
-  padding-bottom: 2px; }
-
-.Select--multi .Select-value {
-  font-size: 1em; }
-
-.Select--multi .Select-input {
-  height: ''; }
 
 .app-map {
   background-color: Azure;
@@ -157,16 +167,16 @@ body {
   padding-left: 0;
   padding-right: 0; }
 
-.ridge-month .month-label {
+.ridge-plot-month {
+  display: none; }
+
+.ridge-plot-month.month-label {
   font-size: 10px;
   fill: grey;
   text-anchor: middle; }
 
-.ridge-month .month-line {
+.ridge-plot-month.month-line {
   stroke: lightGrey; }
-
-.ridge-plot-fill {
-  stroke: none; }
 
 .ridge-plot-outline {
   fill: none;
@@ -175,16 +185,19 @@ body {
   stroke-linejoin: round;
   stroke-linecap: round; }
 
-.ridge-plot-outline.active {
-  stroke-width: 2; }
-
 .ridge-plot-name {
   text-anchor: end;
   font-size: 10px;
   cursor: pointer; }
 
-.ridge-g.defocused .ridge-plot-fill {
-  fill: none !important; }
+.ridge-g.active .ridge-plot-month {
+  display: block; }
+
+.ridge-g.active .ridge-plot-outline {
+  stroke-width: 2; }
+
+.ridge-g.defocused .ridge-plot-month {
+  display: none; }
 
 .ridge-g.defocused .ridge-plot-outline {
   stroke: grey; }
@@ -193,10 +206,11 @@ body {
   fill: grey; }
 
 /* dimmmed comes later than defocused for overriding */
-.ridge-g.dimmed .ridge-plot-fill {
-  fill: none !important; }
+.ridge-g.dimmed .ridge-plot-month {
+  display: none; }
 
 .ridge-g.dimmed .ridge-plot-outline {
+  stroke-width: 1;
   stroke: lightGrey; }
 
 .ridge-g.dimmed .ridge-plot-name {

@@ -95,7 +95,7 @@ let App = withStore('selections')(class extends Component {
             <div ref={div => {this._wrapper.ridgePlots = div;}} />
             <RidgePlots
               data={data}
-              parks={parks}
+              selections={this.props.store.get('selections')}
               onSelectPark={this._selectPark}
               onUnselectPark={this._unselectPark}
               getWidth={this._getWidth} />

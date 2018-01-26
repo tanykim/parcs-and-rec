@@ -1,0 +1,58 @@
+/* override react-select styles*/
+.Select {
+  font-family: $serif;
+}
+.Select-control {
+  color: $black;
+  .Select-placeholder {
+    color: $main;
+  }
+}
+.Select-option {
+  color: $grey;
+}
+.Select-option.is-focused {
+  background-color: transparentize($bg, 0.5);
+  color: black;
+}
+
+/* only for single selection */
+.Select--single.is-focused:not(.is-open) > .Select-control {
+  border-color: $main;
+  box-shadow: none;
+}
+.Select-menu-outer {
+  .Select-option.is-selected {
+    background-color: transparentize($bg, 0.2);
+  }
+}
+
+/* only for Multi selection */
+.Select--multi.is-focused:not(.is-open) > .Select-control {
+  border-color: $bg;
+  box-shadow: none;
+}
+.Select.Select--multi {
+  .Select-control {
+    padding-bottom: 2px;
+  }
+  .Select-value {
+    font-size: 1em;
+    border-color: $ridge;
+    color: $ridge;
+    background-color: $bg;
+    .Select-value-icon {
+      border-right-color: $ridge;
+      &:hover {
+        color: $ridge;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+    &:nth-last-child(2) {
+      color: $selected;
+    }
+  }
+  .Select-input {
+    height: '';
+  }
+}

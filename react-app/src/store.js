@@ -2,6 +2,7 @@ import { connect, createStore, withLogger } from 'undux'
 
 let store = createStore({
   selections: [],
+  sortOption: 'total-desc',
 })
 
 if (!process.env.IS_PRODUCTION) {

@@ -1,6 +1,8 @@
 @import './colors.scss';
 @import './fonts.scss';
 
+@import './Select.scss';
+
 .row-no-margin {
   margin-right: 0;
   margin-left: 0;
@@ -62,7 +64,6 @@
     margin-right: 2em;
     margin-left: 2em;
     text-align: left;
-    font-family: $serif;
   }
   .comparison {
     text-align: center;
@@ -80,52 +81,6 @@
         color: $main;
       }
     }
-  }
-}
-
-/* override */
-.Select.is-focused:not(.is-open) > .Select-control {
-  border-color: $bg;
-  box-shadow: none;
-}
-.Select-control {
-  color: $black;
-  .Select-value {
-    border-color: $ridge;
-    color: $ridge;
-    background-color: $bg;
-    .Select-value-icon {
-      border-right-color: $ridge;
-      &:hover {
-        color: $ridge;
-        background-color: rgba(0, 0, 0, 0.1);
-      }
-    }
-    &:nth-last-child(2) {
-      color: $selected;
-    }
-  }
-  .Select-placeholder {
-    color: $main;
-  }
-}
-.Select-option {
-  color: $grey;
-}
-.Select-option.is-focused {
-  background-color: transparentize($bg, 0.5);
-  color: black;
-}
-
-.Select--multi {
-  .Select-control {
-    padding-bottom: 2px;
-  }
-  .Select-value {
-    font-size: 1em;
-  }
-  .Select-input {
-    height: '';
   }
 }
 
@@ -181,18 +136,16 @@
   padding-right: 0;
 }
 
-.ridge-month {
-  .month-label {
-    font-size: 10px;
-    fill: grey;
-    text-anchor: middle;
-  }
-  .month-line {
-    stroke: lightGrey;
-  }
+.ridge-plot-month{
+  display: none;
 }
-.ridge-plot-fill {
-  stroke: none;
+.ridge-plot-month.month-label {
+  font-size: 10px;
+  fill: grey;
+  text-anchor: middle;
+}
+.ridge-plot-month.month-line {
+  stroke: lightGrey;
 }
 
 .ridge-plot-outline {
@@ -202,18 +155,24 @@
   stroke-linejoin: round;
   stroke-linecap: round;
 }
-.ridge-plot-outline.active {
-  stroke-width: 2;
-}
-
 .ridge-plot-name {
   text-anchor: end;
   font-size: 10px;
   cursor: pointer;
 }
+
+.ridge-g.active {
+  .ridge-plot-month {
+    display: block;
+  }
+  .ridge-plot-outline {
+    stroke-width: 2;
+  }
+}
+
 .ridge-g.defocused {
-  .ridge-plot-fill {
-    fill: none !important;
+  .ridge-plot-month {
+    display: none;
   }
   .ridge-plot-outline {
     stroke: grey;
@@ -225,10 +184,11 @@
 
 /* dimmmed comes later than defocused for overriding */
 .ridge-g.dimmed {
-  .ridge-plot-fill {
-    fill: none !important;
+  .ridge-plot-month {
+    display: none;
   }
   .ridge-plot-outline {
+    stroke-width: 1;
     stroke: lightGrey;
   }
   .ridge-plot-name {

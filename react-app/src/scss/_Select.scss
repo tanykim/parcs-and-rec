@@ -3,17 +3,17 @@
   font-family: $serif;
 }
 .Select-control {
-  color: $black;
+  color: $main-dark;
   .Select-placeholder {
-    color: $main;
+    color: $main-dark;
   }
 }
 .Select-option {
   color: $grey;
 }
 .Select-option.is-focused {
-  background-color: transparentize($bg, 0.5);
-  color: black;
+  background-color: $bg;
+  color: $main-dark;
 }
 
 /* only for single selection */
@@ -23,7 +23,7 @@
 }
 .Select-menu-outer {
   .Select-option.is-selected {
-    background-color: transparentize($bg, 0.2);
+    background-color: $bg-light;
   }
 }
 
@@ -38,13 +38,13 @@
   }
   .Select-value {
     font-size: 1em;
-    border-color: $ridge;
-    color: $ridge;
-    background-color: $bg;
+    border-color: $main;
+    color: $main;
+    background-color: $bg-light;
     .Select-value-icon {
-      border-right-color: $ridge;
+      border-right-color: $main;
       &:hover {
-        color: $ridge;
+        color: $selected;
         background-color: rgba(0, 0, 0, 0.1);
       }
     }

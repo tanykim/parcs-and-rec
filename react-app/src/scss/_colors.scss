@@ -1,21 +1,35 @@
-$bg: #f1eab9;
-$main: #047023;
-$main-dark: #0a3717;
-$selected: red;
-$blue: #0a2460;
-$black: #1d1900;
-$grey: #63625c;
-$white: white;
+$bg: #ffc62f;
+$bg-light: #fef7cd;
+$bg-dark: #bd7f58;
 
-$map-water: Azure;
+$main: #54507d;
+$main-dark: #323045;
+$main-light: #c4dee2;
+
+$selected: #d65d3e;
+
+$blue-light: #c4dee2;
+$blue: #737283;
+$grey: #6a6f72;
+$grey-light: #b1b5b8;
+$grey-lighter: #dbdee0;
+$white: white;
+$black: #1d1900;
+
+
+$blue: #0a2460;
+
+$map-water: $blue-light;
 $map-usa: white;
-$map-neighbor: #efefef;
-$map-path: #ccc;
+$map-neighbor: transparentize($grey-lighter, 0.5);
+$map-path: $grey-light;
+$map-ridge: $main-dark;
+$map-ridge-blank: transparentize($main-light, 0.5);
+$map-ridge-active: $selected;
+$map-ridge-defocused: $main;
+$map-area: transparentize($main, 0.5);
 
 $ridge: DarkGreen;
-$ridge-blank: #efefef;
-$dark: brown;
-$area: transparentize(olive, 0.5);
 
 $comp-0: red;
 $comp-1: blue;

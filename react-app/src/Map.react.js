@@ -51,7 +51,7 @@ class Map extends Component {
       const x = sel.attr('cx');
       const y = sel.attr('cy');
       // TODO: scale dynamically
-      const scale = 10;
+      const scale = 8;
       d3.select('#worldmap')
         .transition()
         .call(
@@ -107,7 +107,7 @@ class Map extends Component {
     }
 
     // max radius is 30, proportioanl to the acreage
-    const r = d3.scaleLinear().range([0, 900]).domain([0, data.max_size])
+    // const r = d3.scaleLinear().range([0, 900]).domain([0, data.max_size])
     // add mark on each park
     g.selectAll('circle')
       .data(data.parks)
@@ -115,14 +115,17 @@ class Map extends Component {
       .append('circle')
       .attr('cx', d => this.projection([d.lon, d.lat])[0])
       .attr('cy', d => this.projection([d.lon, d.lat])[1])
-      .attr('r', d => Math.sqrt(r(d.size)))
+      .attr('r', d => 4)
+      // .attr('r', d => Math.sqrt(r(d.size)))
       .attr('class', d => `map-park-size js-park-${d.id}`)
       .on('click', d => {
         // check if already selected
         if (this.props.selections.map(p => p.value).indexOf(d.id) === -1) {
           this.props.onSelectPark(d.id);
+          d3.select(`.js-park-${d.id}`).classed('active', true);
         } else {
           this.props.onUnselectPark(d.id);
+          d3.select(`.js-park-${d.id}`).classed('defocused', true);
         }
       });
   }
@@ -135,7 +138,7 @@ class Map extends Component {
       .attr('height', dim.h);
 
     // TODO: figure out dynamically with the given dim width and height
-    this.projection.scale(dim.w * 0.6).translate([dim.w * 1.4, dim.h * 1.8]);
+    this.projection.scale(dim.w * 0.8).translate([dim.w * 1.8, dim.h * 1.5]);
 
     // prevents click to zoom
     const stopped = () => {
@@ -148,9 +151,7 @@ class Map extends Component {
 
     // geo data
     const CODE_USA = 840;
-    const neighbors = [124, 484]; // Candada and Mexico
-    const worldPath = topojson.feature(world, world.objects.countries).features
-      .filter(d =>  d.id === CODE_USA || neighbors.indexOf(d.id) > -1);
+    const worldPath = topojson.feature(world, world.objects.countries).features;
     const usaPath = topojson.feature(usa, usa.objects.states).features;
 
     // draw USA states & country boundary

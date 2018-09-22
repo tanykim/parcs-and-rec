@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Libre+Baskerville|Oswald:400,700");
+@import url("https://fonts.googleapis.com/css?family=Cabin:500,700|Lusitana:400,700");
 body {
   margin: 0;
   padding: 0;
@@ -6,31 +6,31 @@ body {
 
 /* override react-select styles*/
 .Select {
-  font-family: "Libre Baskerville", Georgia, "Times New Roman", serif; }
+  font-family: "Lusitana", Georgia, "Times New Roman", serif; }
 
 .Select-control {
-  color: #1d1900; }
+  color: #323045; }
   .Select-control .Select-placeholder {
-    color: #047023; }
+    color: #323045; }
 
 .Select-option {
-  color: #63625c; }
+  color: #6a6f72; }
 
 .Select-option.is-focused {
-  background-color: rgba(241, 234, 185, 0.5);
-  color: black; }
+  background-color: #ffc62f;
+  color: #323045; }
 
 /* only for single selection */
 .Select--single.is-focused:not(.is-open) > .Select-control {
-  border-color: #047023;
+  border-color: #54507d;
   box-shadow: none; }
 
 .Select-menu-outer .Select-option.is-selected {
-  background-color: rgba(241, 234, 185, 0.8); }
+  background-color: #fef7cd; }
 
 /* only for Multi selection */
 .Select--multi.is-focused:not(.is-open) > .Select-control {
-  border-color: #f1eab9;
+  border-color: #ffc62f;
   box-shadow: none; }
 
 .Select.Select--multi .Select-control {
@@ -38,16 +38,16 @@ body {
 
 .Select.Select--multi .Select-value {
   font-size: 1em;
-  border-color: DarkGreen;
-  color: DarkGreen;
-  background-color: #f1eab9; }
+  border-color: #54507d;
+  color: #54507d;
+  background-color: #fef7cd; }
   .Select.Select--multi .Select-value .Select-value-icon {
-    border-right-color: DarkGreen; }
+    border-right-color: #54507d; }
     .Select.Select--multi .Select-value .Select-value-icon:hover {
-      color: DarkGreen;
+      color: #d65d3e;
       background-color: rgba(0, 0, 0, 0.1); }
   .Select.Select--multi .Select-value:nth-last-child(2) {
-    color: red; }
+    color: #d65d3e; }
 
 .Select.Select--multi .Select-input {
   height: ''; }
@@ -60,33 +60,40 @@ body {
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2); }
 
 .title-wrapper {
-  background-color: #0a3717;
+  background-color: #323045;
   padding-left: 0;
   padding-right: 0;
   position: relative;
   text-align: center; }
   .title-wrapper .diagonal {
     background-color: transparent;
-    background-image: -webkit-linear-gradient(8deg, transparent 49.5%, #0a3717 50%);
+    background-image: -webkit-linear-gradient(8deg, transparent 49.5%, #323045 50%);
     min-height: 500px;
     min-height: 100%;
     position: absolute;
     left: -100px;
     width: 100px;
     top: 0; }
+  .title-wrapper .mountain {
+    background-image: url("/assets/SVG/mountain.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    background-position-x: center;
+    margin-top: 1.6em; }
   .title-wrapper .title {
     color: white;
-    font-family: "Oswald", "Hevetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Cabin", "Hevetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
     font-size: 2em;
     letter-spacing: 0.02em;
     line-height: 110%;
     display: flex;
     justify-content: center;
-    margin-top: 2em;
-    margin-bottom: 0.6em; }
+    margin-top: 0.4em;
+    margin-bottom: 0.4em; }
     .title-wrapper .title .national {
-      color: rgba(255, 255, 255, 0.5);
+      color: #c4dee2;
       margin-right: 0.2em;
       letter-spacing: 0em; }
     .title-wrapper .title .parks {
@@ -95,34 +102,41 @@ body {
       font-weight: 300;
       margin-left: 0.2em; }
     .title-wrapper .title .al {
-      color: rgba(255, 255, 255, 0.5);
+      color: #c4dee2;
       font-weight: normal;
       letter-spacing: 0em; }
   .title-wrapper .headline {
-    color: #f1eab9;
-    font-family: "Libre Baskerville", Georgia, "Times New Roman", serif;
-    margin-bottom: 1.2em; }
-  .title-wrapper .park-select {
-    margin-right: 2em;
-    margin-left: 2em;
-    text-align: left; }
+    color: #ffc62f;
+    font-family: "Lusitana", Georgia, "Times New Roman", serif;
+    margin-bottom: 2em; }
   .title-wrapper .comparison {
-    text-align: center; }
+    text-align: center;
+    margin-bottom: 1em; }
     .title-wrapper .comparison .button {
       font-size: 1.2em;
       letter-spacing: 0.1em;
       display: inline-block;
-      background-color: #f1eab9;
-      font-family: "Oswald", "Hevetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #ffc62f;
+      color: #323045;
+      font-family: "Cabin", "Hevetica Neue", Helvetica, Arial, sans-serif;
       margin-top: 1em;
       padding: 0.4em 1em;
       border-radius: 4px;
       cursor: pointer; }
       .title-wrapper .comparison .button:hover {
-        color: #047023; }
+        background-color: #c4dee2; }
+  .title-wrapper .park-select {
+    margin-right: 2em;
+    margin-left: 2em;
+    text-align: left; }
+  .title-wrapper .upto {
+    margin-top: 0.6em;
+    color: #c4dee2;
+    font-family: "Lusitana", Georgia, "Times New Roman", serif; }
 
+/* map */
 .app-map {
-  background-color: Azure;
+  background-color: #c4dee2;
   padding-right: 0;
   padding-left: 0; }
 
@@ -130,7 +144,7 @@ body {
   float: left; }
 
 .map-usa-states, .map-usa, .map-neighbor {
-  stroke: #ccc; }
+  stroke: #b1b5b8; }
 
 .map-usa-states {
   fill: white; }
@@ -139,24 +153,30 @@ body {
   fill: none; }
 
 .map-neighbor {
-  fill: #efefef; }
+  fill: rgba(219, 222, 224, 0.5); }
 
 .map-park-size {
-  fill: rgba(128, 128, 0, 0.5); }
+  fill: rgba(84, 80, 125, 0.5); }
+
+.map-park-size.active {
+  fill: #d65d3e; }
+
+.map-park-size.defocused {
+  fill: #54507d; }
 
 .ridge-parks {
-  stroke: DarkGreen;
+  stroke: #323045;
   fill: white;
   stroke-linecap: round; }
 
 .ridge-parks.active {
-  fill: DarkGreen; }
+  fill: #d65d3e; }
 
 .ridge-parks.defocused {
-  fill: brown; }
+  fill: #54507d; }
 
 .ridge-blank {
-  stroke: #efefef; }
+  stroke: rgba(196, 222, 226, 0.5); }
 
 /* ridge plots */
 .ridge-plots-wrapper {
@@ -180,7 +200,7 @@ body {
 
 .ridge-plot-outline {
   fill: none;
-  stroke: brown;
+  stroke: DarkGreen;
   stroke-width: 1;
   stroke-linejoin: round;
   stroke-linecap: round; }

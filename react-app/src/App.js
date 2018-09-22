@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
 import Select from 'react-select';
 
@@ -6,6 +7,7 @@ import { withStore } from './store';
 import Map from './Map.react';
 import ParkSelect from './ParkSelect.react';
 import RidgePlots from './RidgePlots.react';
+import Park from './Park.react';
 import Comparison from './Comparison.react';
 
 const data = require('./data/data.json');
@@ -15,28 +17,36 @@ let App = withStore('selections')(class extends Component {
   _wrapper = {
     map: null,
     ridgePlots: null,
+    park: null,
   };
 
   _getWidth = (type) => {
     return this._wrapper[type]=== null ? 800 : this._wrapper[type].offsetWidth;
   }
 
-  _selSelections = (selections) => {
+  _setSelections = (selections) => {
     if (selections.length === MULTI_MAX + 1) return;
     this.props.store.set('selections')(selections);
+    let id = [];
+    if (selections.length > 0) {
+      id = [selections[selections.length - 1].value];
+    }
+    this.props.store.set('openedParks')(id);
   }
 
   _selectPark = (id) => {
     const park = data.parks.filter(park => park.id === id)[0];
     const selection = [{value: park.id, label: park.name}];
     const selections = this.props.store.get('selections').concat(selection);
-    this._selSelections(selections);
+    this._setSelections(selections);
   }
 
   _unselectPark = (id) => {
     const newOption = this.props.store.get('selections').filter(sel => sel.value !== id);
     this.props.store.set('selections')(newOption);
-    this.props.store.set('isMultiMax')(false);
+    this.props.store.set('openedParks')(
+      _.difference(this.props.store.get('openedParks'), [id])
+    );
   }
 
   render() {
@@ -66,6 +76,7 @@ let App = withStore('selections')(class extends Component {
           </div>
           <div className="col-xs-12 col-md-5 col-lg-4 first-xs title-wrapper">
             <div className="diagonal" />
+            <div className="mountain"></div>
             <div className="title">
               <div className="national">National</div>
               <div className="parks">
@@ -76,18 +87,18 @@ let App = withStore('selections')(class extends Component {
             <div className="headline">
               When is the best time to visit <br/>the {data.parks.length} National Parks in the United States?
             </div>
-            <div className="park-select" id="park-select">
-              <ParkSelect
-                parks={data.parks}
-                selections={this.props.store.get('selections')}
-                onSetSelections={this._selSelections}/>
-            </div>
             {this.props.store.get('selections').length > 1 &&
               <div className="comparison">
                 <div className="button">See Comparison</div>
               </div>
             }
-            {this.props.store.get('selections') && <div>Copmare only up to 4</div>}
+            <div className="park-select" id="park-select">
+              <ParkSelect
+                parks={data.parks}
+                selections={this.props.store.get('selections')}
+                onSetSelections={this._setSelections}/>
+            </div>
+            {this.props.store.get('selections') && <div className="upto">Copmare Upto 4 Parks</div>}
           </div>
         </div>
         <div className="row">
@@ -101,6 +112,11 @@ let App = withStore('selections')(class extends Component {
               getWidth={this._getWidth} />
           </div>
         </div>
+        {this.props.store.get('selections').map(selection =>
+          <Park
+            key={selection.value}
+            park={data.parks.filter(park => park.id === selection.value)[0]}/>
+        )}
         {this.props.store.get('selections').length > 1 &&
           <Comparison
             parks={parks}
